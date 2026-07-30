@@ -1,5 +1,4 @@
-# Prato Cheio — [nome do grupo]
-
+# Prato Cheio
 Projeto da disciplina **Análise, Projeto e Desenvolvimento Ágil**.
 Conecta doadores de alimentos excedentes a ONGs, antes que a comida se perca.
 
@@ -7,9 +6,11 @@ Conecta doadores de alimentos excedentes a ONGs, antes que a comida se perca.
 > walking skeleton (U1) → incremento guiado pelo projeto (U2) → produto refatorado (U3).
 
 ## Integrantes
-- Nome — @usuario-github
-- Nome — @usuario-github
-- Nome — @usuario-github
+- [Guilherme Halter Nunes](https://github.com/GuilhermeHalter)
+- [João Vitor Bagatoli](https://github.com/joao-bagatoli)
+- [Larissa Silva Costa](https://github.com/Larissa240)
+- [Vitória Milho Furtado](https://github.com/MilhoFurtado)
+- [Wedley Silva Schmoeller](https://github.com/WedleySilva)
 
 ## Como rodar
 
