@@ -57,6 +57,26 @@
    - **Regra classificada como INVENTADA** pelo grupo, no preenchimento da lacuna; é decisão, não levantamento.
    - **Verificação:** simulação end-to-end com relógio simulado: aceitar uma doação, avançar para `validade + 2h`, confirmar (a) que ela some da lista pública e (b) que exige ação manual para re-emissão.
 
+## Conflitos de prioridade
+
+**Conflito escolhido:** Doadores (simplicidade) × Vigilância sanitária (rastreabilidade).
+
+- **As duas falas em conflito (1ª pessoa, voz do stakeholder):**
+  - Doador: *"Eu só quero publicar o que sobrou em menos de 30 segundos, direto do celular, sem criar conta nem preencher formulário longo."*
+  - Vigilância: *"Eu só autorizo o sistema se cada entrega tiver, registrada no momento da publicação, tipo, quantidade e validade: sem isso não há rastreabilidade."*
+
+- **Eixo do trade-off:** nº de campos obrigatórios no formulário de publicação. Mais obrigatórios = mais fricção para o doador; menos obrigatórios = menos cobertura de rastreabilidade para a vigilância. Cada lado ganha na medida em que o outro perde.
+
+- **O que cada lado perde:**
+  - Doador perde: velocidade de publicação e: mais crítico: parte dos doadores desistentes, em especial nos horários de pico, quando o tempo de cadastro é o que mais pesa.
+  - Vigilância perde: cobertura da rastreabilidade mínima legal; risco de autuação e bloqueio formal do piloto.
+
+- **Critério (operável por terceiro, sem consultar o grupo):** *"Na iteração 1 do piloto, são obrigatórios apenas os três campos exigidos pela vigilância como mínimo legal de rastreabilidade: `tipo_alimento`, `quantidade` e `validade`. Qualquer outro campo: descrição, foto, horário preferido, observações: é opcional e fica para a segunda iteração."* Qualquer dev lê esse enunciado e implementa o mesmo comportamento sem perguntar ao grupo.
+
+- **Saída usada: DECIDIR.** Adotamos o critério acima já na iteração 1, e ele vira a regra de negócio nº 1 desta análise.
+  - **Por que não adiar:** sem a regra mínima de obrigatoriedade, o piloto não recebe aval da vigilância: adiar é adiar o piloto.
+  - **Por que não anular o eixo:** vigilância é restritor legal, não opção; não há versão do mundo em que ela sai da equação.
+
 ## Histórias de usuário
 | # | História (Como… quero… para…) | INVEST: o que falha |
 |---|---|---|
