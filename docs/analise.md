@@ -38,6 +38,25 @@
 
 ## Regras de negócio
 
+1. **Publicação de uma doação exige o conjunto mínimo de campos (tipo + quantidade + validade).**
+   O caso enuncia que a vigilância "exige" esses três campos, mas não diz se a publicação é bloqueada sem eles.
+   - **Origem:** **imposta**: vigilância aparece como única força externa restritora explícita.
+   - **Enunciado (verificável):** o sistema rejeita a publicação de uma doação cujo payload não contenha, não nulos, `tipo_alimento`, `quantidade` e `validade`; sem os três, a chamada retorna `400` e a doação não aparece na lista pública.
+   - **Verificação:** 2 desenvolvedores (um back, um front) implementam de forma independente a partir do enunciado; teste automatizado chama o endpoint com payload sem `validade` → ambos rejeitam. Verificável com 1 chamada negativa.
+ 
+2. **Ordenação das ONGs candidatas no momento da publicação privilegia proximidade.**
+   O caso afirma que "ONGs mais próximas do doador têm vantagem logística (menos tempo até a coleta)", mas não diz *como* isso vira ação do sistema.
+   - **Origem:** **derivada**: recomendação informal do caso, sem mecânica explícita.
+   - **Enunciado (verificável):** quando uma doação é publicada, o sistema calcula a distância geodésica entre o endereço do doador e cada ONG cadastrada e expõe a lista em ordem crescente de distância; a regra afeta a *visualização*, não o direito de aceitar (qualquer ONG cadastrada pode aceitar).
+   - **Verificação:** publicar uma doação com 3 ONGs em distâncias 1,2 km / 0,4 km / 3,0 km → ordem na tela: ONG-B (0,4), ONG-A (1,2), ONG-C (3,0). Verificável com fixture de coordenadas (sem mock de distância).
+ 
+3. **Destino de uma doação aceita que expira sem ser coletada.**
+   O caso não diz o que acontece com uma doação aceita mas não coletada dentro da janela de validade nem se outra ONG pode assumi-la.
+   - **Origem:** **AUSENTE**: não está no caso; alguém vai ter de decidir. **Quem decide:** Marta, com aval da vigilância sanitária antes do piloto ir para a rua.
+   - **Enunciado (a ser adotado quando decidido: protótipo atual trata como terminal após 1ª aceitação):** uma doação aceita por uma ONG permanece em estado `aceita` até `validade` ou `coletada`; se expirar sem coleta, transita para `expirada_aceita` e **não** volta para a lista pública sem intervenção manual da Marta.
+   - **Regra classificada como INVENTADA** pelo grupo, no preenchimento da lacuna; é decisão, não levantamento.
+   - **Verificação:** simulação end-to-end com relógio simulado: aceitar uma doação, avançar para `validade + 2h`, confirmar (a) que ela some da lista pública e (b) que exige ação manual para re-emissão.
+
 ## Histórias de usuário
 | # | História (Como… quero… para…) | INVEST: o que falha |
 |---|---|---|
