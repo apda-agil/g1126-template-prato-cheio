@@ -89,8 +89,12 @@
 | **7** | **Como ONG receptora**, quero filtrar a lista de doações por tipo de alimento e proximidade (bairro), **para** otimizar a rota do meu voluntário e economizar no custo logístico da coleta. *(Fatia 2: Bom/Luxo de Encontrar)* | **I** → falha em Independente → depende da base de doadores ter endereços mapeados; mitigar testando com coordenadas fixas de 3 bairros-mock. |
 | **8** | **Como ONG receptora**, quero visualizar fotos da doação, o histórico do doador e ter uma tela de confirmação com resumo antes da reserva, **para** evitar o recebimento e descarte de alimentos em mau estado. *(Fatia 3: Bom/Luxo de Decidir e Aceitar)* | **T** → falha em Testável → "histórico do doador" é vago; spike de 1 h com a Marta para definir quais variáveis compõem a nota do histórico (taxa de abandono? volume?). |
 
-**A história zero (★ História 1)*** **Por que ela:** Se o doador demorar e desistir do cadastro, não existe oferta de alimentos na plataforma, inviabilizando o objetivo principal de redução de desperdício e zerando a participação das ONGs.* **O que ficou FORA da fatia:** Upload de fotos da comida, histórico de doações passadas, edição de perfil e descrições textuais longas.* **Por quê:**    * *Upload de fotos e descrições:* Medição (aumenta severamente o tempo na tela e o peso do envio via celular, ameaçando a métrica de "menos de 30 segundos").    * *Histórico e perfil:* Risco de complexidade técnica (exigiria gestão de sessões, login complexo e banco relacional mais robusto já no dia 1, adiando o teste do piloto).
-
+**A história zero (★ História 1)**
+* **Por que ela:** Se o doador demorar e desistir do cadastro, não existe oferta de alimentos na plataforma, inviabilizando o objetivo principal de redução de desperdício e zerando a participação das ONGs.
+* **O que ficou FORA da fatia:** Upload de fotos da comida, histórico de doações passadas, edição de perfil e descrições textuais longas.
+* **Por quê:**
+    * *Upload de fotos e descrições:* Medição (aumenta severamente o tempo na tela e o peso do envio via celular, ameaçando a métrica de "menos de 30 segundos").
+    * *Histórico e perfil:* Risco de complexidade técnica (exigiria gestão de sessões, login complexo e banco relacional mais robusto já no dia 1, adiando o teste do piloto).
 ## Critérios de aceite
 **História X** — Dado … Quando … Então …
 
