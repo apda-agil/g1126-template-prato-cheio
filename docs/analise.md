@@ -111,4 +111,11 @@
 - **Riscos e limitações:**
 
 ## Uso de IA
-O que geramos com IA, o que verificamos e o que alteramos.
+O registro abaixo detalha como a IA gerou as histórias iniciais e as correções estruturais que fizemos para o Trabalho 3, focando nas falhas de contexto e na quebra de regras de negócio.
+
+* **História #1 (Doador e a barreira de tempo)**
+    * **O que ela gerou:** "Como doador, quero cadastrar uma doação no sistema web, para que a doação fique cadastrada."
+    * **O que nós mudamos e por quê:** Corrigimos o "para" (que era tautológico e vazio, conforme Aula 2) para o objetivo de impacto real: "não desistir no meio do cadastro e acabar descartando a comida". Além disso, mudamos "sistema web" para publicação em menos de 30s.
+    * **Erro mais caro:** A IA ignorou completamente a restrição do uso via **celular** e a exigência de ser algo ultra-rápido, assumindo um cadastro web tradicional.
+    * **Regra de negócio inventada:** A IA inventou que o sistema validaria CNPJ e endereço do restaurante no momento da doação. Quem decide sobre cadastro prévio é a **Marta**, mas na iteração 1 a regra é o formulário mínimo de 3 campos da vigilância.
+
