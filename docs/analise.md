@@ -119,3 +119,14 @@ O registro abaixo detalha como a IA gerou as histórias iniciais e as correçõe
     * **Erro mais caro:** A IA ignorou completamente a restrição do uso via **celular** e a exigência de ser algo ultra-rápido, assumindo um cadastro web tradicional.
     * **Regra de negócio inventada:** A IA inventou que o sistema validaria CNPJ e endereço do restaurante no momento da doação. Quem decide sobre cadastro prévio é a **Marta**, mas na iteração 1 a regra é o formulário mínimo de 3 campos da vigilância.
 
+* **História #4 (Voluntário na rua)**
+    * **O que ela gerou:** "Como voluntário entregador, quero um mapa interativo com navegação por voz, para chegar ao local da coleta."
+    * **O que nós mudamos e por quê:** Trocamos o mapa pesado por "endereço em formato de texto leve". A justificativa é técnica: um mapa ao vivo não carrega. 
+    * **Erro mais caro:** A IA apagou a restrição explícita do caso: os entregadores estão na rua com **conexão instável** e o projeto tem **orçamento próximo de zero** (inviável pagar API de mapas agora).
+    * **Regra de negócio inventada:** A IA inventou o roteamento ativo gerenciado pela plataforma (tracking de frota). Quem decide se isso entra no futuro é a **Marta**, após avaliar a viabilidade com as ONGs.
+
+* **História #7 (ONG e o filtro geográfico - Fatia 2)**
+    * **O que ela gerou:** "Como ONG receptora, quero buscar doações no país inteiro através de uma barra de pesquisa, para achar o que preciso."
+    * **O que nós mudamos e por quê:** Reduzimos o escopo geográfico para "proximidade (bairro)" em formato de filtro, compondo a Fatia 2 (camada Bom/Luxo) do método hambúrguer. A busca aberta em barra de texto geraria fricção e não resolveria a proximidade.
+    * **Erro mais caro:** A IA ignorou a limitação fundamental do escopo: o sistema vai rodar inicialmente apenas em **um bairro-piloto**. Não faz sentido buscar doações a nível nacional no MVP.
+    * **Regra de negócio inventada:** A IA inventou que as ONGs podem solicitar frete terceirizado se a doação for de outra cidade. Quem decide sobre as políticas de frete e expansão logística é a **Marta**, mas isso não existe na fase piloto.
