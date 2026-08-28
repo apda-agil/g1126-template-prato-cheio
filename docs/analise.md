@@ -95,8 +95,43 @@
 * **Por quê:**
     * *Upload de fotos e descrições:* Medição (aumenta severamente o tempo na tela e o peso do envio via celular, ameaçando a métrica de "menos de 30 segundos").
     * *Histórico e perfil:* Risco de complexidade técnica (exigiria gestão de sessões, login complexo e banco relacional mais robusto já no dia 1, adiando o teste do piloto).
+
 ## Critérios de aceite
-**História X** — Dado … Quando … Então …
+
+**História 1 ★ (história zero)** — *Como doador, quero publicar a doação preenchendo os campos obrigatórios em menos de 30 segundos, para não desistir no meio do cadastro e acabar descartando a comida.*
+
+- **Dado que** o formulário de publicação exige apenas os 3 campos obrigatórios (tipo, quantidade e validade) e um doador preencheu os três
+- **Quando** ele submete a publicação
+- **Então** a doação aparece na lista de doações disponíveis, com tipo, quantidade e validade em texto
+
+- **Dado que** um doador submeteu uma publicação sem informar a validade
+- **Quando** o sistema processa a publicação
+- **Então** o sistema recusa a publicação (400) e a doação não aparece na lista de disponíveis
+
+**História 6** — *Como ONG receptora, quero ver a lista de doações em ordem de publicação (tipo, quantidade e validade em texto) e aceitar com 1 clique que grava meu horário, para garantir a reserva rápida da comida antes que outra ONG pegue.*
+
+- **Dado que** existe uma doação publicada e ainda não aceita
+- **Quando** a ONG consulta as doações disponíveis
+- **Então** a doação aparece na lista, com tipo, quantidade e validade em texto, em ordem de publicação
+
+- **Dado que** existe uma doação publicada e ainda não aceita
+- **Quando** a ONG a aceita com 1 clique
+- **Então** a doação deixa de aparecer na lista de disponíveis e a aceitação fica registrada com o horário da ONG
+
+- **Dado que** uma doação já foi aceita por uma ONG
+- **Quando** uma segunda ONG tenta aceitar a mesma doação
+- **Então** o sistema recusa a aceitação e a doação permanece reservada à primeira ONG, fora da lista de disponíveis
+
+**História 3** — *Como coordenadora da plataforma (Marta), quero visualizar o total semanal de doações que expiraram sem coleta, para medir o gargalo logístico e evitar perda de engajamento da rede.*
+
+- **Dado que** existem doações com validade vencida e sem registro de coleta na semana
+- **Quando** Marta consulta o painel semanal de expiradas
+- **Então** o painel mostra a contagem de doações que expiraram sem coleta na semana
+
+- **Dado que** ainda não há doações publicadas na primeira semana do piloto
+- **Quando** Marta consulta o painel semanal
+- **Então** o painel mostra "sem dados" (ou 0), sem erro — a linha de base começa no dia 1 do piloto
+
 
 ## Riscos
 | Risco | Probabilidade | Impacto | Mitigação |
