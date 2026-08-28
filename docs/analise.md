@@ -134,8 +134,13 @@
 
 
 ## Riscos
+
+*Escala usada: probabilidade e impacto em **alta / média / baixa**.*
+
 | Risco | Probabilidade | Impacto | Mitigação |
 |---|---|---|---|
+| A vigilância sanitária não foi entrevistada na semana 1 (sem relacionamento formal); se os 3 campos obrigatórios não forem suficientes para a rastreabilidade que ela exigir, o piloto pode ser embargado | média | alto | Até 02/09, João agenda (via Marta) uma reunião formal com a vigilância e documenta em `docs/analise.md` a confirmação dos 3 campos e do fluxo de doação expirada; qualquer exigência nova vira regra de negócio antes do branch `entrega-1` |
+| O walking skeleton não fecha a tempo: sem "publicada → aceita → sai da lista" ponta a ponta não há o que defender no Trabalho 1 | média | alto | Até 31/08, Guilherme implementa `src/doacoes.js` e `src/repositorio.js` convertendo os 5 `it.todo` de `tests/doacoes.test.js` em `it` reais; até 01/09 Larissa revisa o PR — o merge só sai com CI verde |
 
 ## Hipótese e experimento
 
