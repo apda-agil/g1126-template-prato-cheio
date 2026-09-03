@@ -153,10 +153,13 @@
 **Experimento (orçamento próximo de zero):** rodar o walking skeleton com a rede de doadores e ONGs da Marta nas duas primeiras semanas do piloto, registrando os tempos desde o dia 1 (baseline). Nenhuma compra de infraestrutura — é o próprio sistema mais uma planilha; as entrevistas com 2 doadores da semana 1 complementam a leitura do gargalo.
 
 ## Decisão de análise
-- **Problema:**
+ 
+- **Problema:** qual é a fronteira da fatia do walking skeleton do Trabalho 1 — o que entra na iteração 1 e o que fica de fora — para que a história zero (publicar em menos de 30 s) valide o fluxo central do caso com risco baixo e orçamento próximo de zero.
 - **Alternativas:**
-- **Decisão e justificativa:**
-- **Riscos e limitações:**
+  - **A — Fatia mínima:** o walking skeleton cobre apenas "doador publica com os 3 campos → ONG vê a lista → ONG aceita com 1 clique → doação sai da lista". Ganha-se entrega em 1 semana, CI verde e 5 critérios testáveis; perde-se o exercício da entrega física, fotos, histórico, disputa entre ONGs e cancelamento.
+  - **B — Fatia ampla:** incluir foto, descrição e fluxo de entrega já no walking skeleton. Ganha-se um protótipo mais próximo do produto final e mais material para a demo; perde-se porque upload e campos extras aumentam o tempo na tela e o peso no celular (ameaçando a métrica dos 30 s e o objetivo de impacto 1), exigem sessão/login e estado mais complexos no dia 1 e adiam o teste do piloto — os mesmos riscos que a análise INVEST marcou nas histórias 4 e 8.
+- **Decisão e justificativa:** adotamos a **Alternativa A** — a fronteira da história zero fechada na Aula 3 permanece: publicar (3 campos) → aceitar (1 clique) → sair da lista. A justificativa se liga ao objetivo de impacto 1 (reduzir comida descartada): sem oferta publicada em menos de 30 s não existe doação alguma, e a história zero é pré-condição de todas as outras. Foto, histórico e entrega ficaram como fatias 2/3 (Bom/Luxo) da análise INVEST e não são necessárias para o piloto da iteração 1. A regra de negócio nº 1 (3 campos obrigatórios) nasce deste recorte, e os critérios de aceite desta entrega são exatamente os `it.todo` de `tests/doacoes.test.js`.
+- **Riscos e limitações:** a fatia mínima não exercita a última milha (voluntário entregador com conexão instável — história 4), que fica para a iteração 2; o custo é descobrir problemas de usabilidade de rua tarde. A disputa entre ONGs além da 1ª aceitação também fica de fora: a regra de negócio nº 3 (doação aceita que expira) permanece com o fluxo "expirada_aceita" decidido pelo grupo até Marta e a vigilância validarem. Por fim, a métrica dos 30 s não é verificada por teste automatizado — só pelo desenho do formulário (3 campos) e pela medição manual na entrevista com doadores da semana 1.
 
 ## Uso de IA
 O registro abaixo detalha como a IA gerou as histórias iniciais e as correções estruturais que fizemos para o Trabalho 3, focando nas falhas de contexto e na quebra de regras de negócio.
