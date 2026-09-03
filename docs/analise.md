@@ -143,6 +143,14 @@
 | O walking skeleton não fecha a tempo: sem "publicada → aceita → sai da lista" ponta a ponta não há o que defender no Trabalho 1 | média | alto | Até 31/08, Guilherme implementa `src/doacoes.js` e `src/repositorio.js` convertendo os 5 `it.todo` de `tests/doacoes.test.js` em `it` reais; até 01/09 Larissa revisa o PR — o merge só sai com CI verde |
 
 ## Hipótese e experimento
+ 
+**Acreditamos que** a comida boa se perde no bairro-piloto principalmente por causa do tempo entre a doação ser publicada e ser coletada — quanto maior esse tempo, maior a chance de a doação expirar sem destino (suposição da Marta, ainda sem medição que a confirme).
+
+**Saberemos que estávamos errados se**, até 30/09, a mediana do tempo entre `publicada_em` e `coletada_em` das doações coletadas nas duas primeiras semanas do piloto for **menor que 30 minutos** — se a coleta já é rápida e a comida ainda se perde, o gargalo está em outra etapa (fricção no cadastro ou capacidade das ONGs) e a iteração 2 deve atacá-la.
+
+**Como medimos:** o sistema registra `publicada_em` na publicação e `coletada_em` na coleta (métricas já definidas no objetivo de impacto 3); a mediana semanal sai de uma planilha alimentada pelo relatório do sistema e pelos dados de peso/quantidade reportados pelas ONGs.
+ 
+**Experimento (orçamento próximo de zero):** rodar o walking skeleton com a rede de doadores e ONGs da Marta nas duas primeiras semanas do piloto, registrando os tempos desde o dia 1 (baseline). Nenhuma compra de infraestrutura — é o próprio sistema mais uma planilha; as entrevistas com 2 doadores da semana 1 complementam a leitura do gargalo.
 
 ## Decisão de análise
 - **Problema:**
