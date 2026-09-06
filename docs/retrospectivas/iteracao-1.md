@@ -47,8 +47,8 @@ evitando concentrar a validação do fluxo completo próximo à entrega.
 
 | Integrante | Pontos | Contribuição |
 |---|---:|---|
-| Larissa | 25 | Trabalhou no conflito de prioridade, documentação do uso de IA e riscos. Também participou diretamente da implementação do walking skeleton, adicionando validações às funções de criação e aceitação de doações, implementando o repositório e desenvolvendo os testes de publicação e aceitação. |
-| Guilherme Halter | 27 | Trabalhou na documentação dos stakeholders, definição e melhoria da História Zero e seus critérios de aceite, além da hipótese e do experimento. Também realizou atualização da documentação do projeto. |
-| João Bagatoli | 23 | Trabalhou nas regras de negócio, histórias de usuário e critérios de aceite, além da definição da decisão de análise e sua justificativa. |
-| MilhoFurtado | 25 | Trabalhou nos objetivos de impacto, na revisão das histórias relacionadas aos voluntários e ONGs e também nas histórias de usuário e critérios de aceite. |
+| Larissa Silva | 25 | Trabalhou no conflito de prioridade, documentação do uso de IA e riscos. Também participou diretamente da implementação do walking skeleton, adicionando validações às funções de criação e aceitação de doações, implementando o repositório e desenvolvendo os testes de publicação e aceitação. |
+| Guilherme Halter | 25 | Trabalhou na documentação dos stakeholders, definição e melhoria da História Zero e seus critérios de aceite, além da hipótese e do experimento. Também realizou atualização da documentação do projeto. |
+| João Bagatoli | 25 | Trabalhou nas regras de negócio, histórias de usuário e critérios de aceite, além da definição da decisão de análise e sua justificativa. |
+| Vitória Milho | 25 | Trabalhou nos objetivos de impacto, na revisão das histórias relacionadas aos voluntários e ONGs e também nas histórias de usuário e critérios de aceite. |
 | **Total** | **100** | |
