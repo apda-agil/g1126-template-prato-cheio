@@ -18,7 +18,26 @@
 | **Impacto no uso de dados móveis** | **Alto:** Upload e carregamento de imagens consomem significativamente a franquia de dados móveis. | **Baixo:** O tráfego de dados em texto é negligenciável para as franquias de dados dos voluntários e doadores. |
 
 ## Diagramas
-(contexto + dados ou componentes — em `docs/` ou como imagem)
+
+### Diagrama de contexto
+
+<img width="700" height="732" alt="0e377086-f9c9-4940-a0bb-32c7311b3380" src="https://github.com/user-attachments/assets/7c36bd05-c3b2-4f0c-81e5-6d846c291a54" />
+
+### Modelo de dados
+
+<img width="700" height="1000" alt="mermaid-diagram-2026-09-24-210430" src="https://github.com/user-attachments/assets/e0642be9-c449-4459-80a6-3747ba731924" />
+
+### Revisão usando IA
+
+1. Inclusão do "Monitoramento / CI" como Sistema Externo
+ 
+- **O erro:** O diagrama inicial apresentava o CI (Continuous Integration) como um ator ou sistema externo interagindo ativamente para verificar o funcionamento do sistema e receber status.
+- **Explicação:** O documento de análise menciona o CI e o GitHub Actions exclusivamente no tópico 10 como um "Critério de conclusão" técnico (para garantir que os testes automatizados passem antes do *merge* do código). O CI é uma ferramenta de desenvolvimento da equipe de engenharia e não um participante do domínio de negócio (fluxo de doação) que devesse constar em um diagrama de contexto C4 de nível 1.
+ 
+2. Omissão de Stakeholders
+ 
+- **O erro:** O relacionamento inicial do Doador omitia as restrições estritas dos dados, o aceite da ONG não refletia a agilidade mapeada, e a Gestora (Marta) foi totalmente omitida do diagrama.
+- **Explicação:** A análise detalhou regras de negócio precisas para o Walking Skeleton: para simplificar o cadastro, é obrigatório enviar estritamente "tipo, quantidade e validade". Além disso, a ONG precisava aceitar as doações com "1 clique" visando velocidade. A omissão da Marta também foi um erro crítico da primeira versão da IA, uma vez que o documento a classifica como uma stakeholder de "alta" influência responsável por visualizar o gargalo logístico das doações expiradas.
 
 ## ADRs
 Ver `docs/adr/`.
