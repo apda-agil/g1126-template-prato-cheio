@@ -9,7 +9,6 @@ Conecta doadores de alimentos excedentes a ONGs, antes que a comida se perca.
 - [Guilherme Halter Nunes](https://github.com/GuilhermeHalter)
 - [João Vitor Bagatoli](https://github.com/joao-bagatoli)
 - [Larissa da Silva Costa](https://github.com/Larissa240)
-- [Vitória Milho Furtado](https://github.com/MilhoFurtado)
 - [Wedley Silva Schmoeller](https://github.com/WedleySilva)
 
 ## Como rodar
