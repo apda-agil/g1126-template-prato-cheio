@@ -33,5 +33,23 @@ export function criarApp() {
     }
   });
 
+  // Histórias incrementais. Identificadores por texto são apenas conveniência do MVP;
+  // autenticação e autorização reais são necessárias antes de implantação pública.
+  app.get('/api/doadores/:doador/doacoes', async (req, res) => {
+    try { res.json(await doacoes.minhasDoacoes(req.params.doador)); }
+    catch (e) { res.status(400).json({ erro: e.message }); }
+  });
+  app.post('/api/doacoes/:id/cancelar', async (req, res) => {
+    try { res.json(await doacoes.cancelar(req.params.id, req.body?.doador)); }
+    catch (e) { res.status(400).json({ erro: e.message }); }
+  });
+  app.post('/api/doacoes/:id/coletar', async (req, res) => {
+    try { res.json(await doacoes.coletar(req.params.id, req.body?.ong)); }
+    catch (e) { res.status(400).json({ erro: e.message }); }
+  });
+  app.get('/api/relatorios/aceitas', async (req, res) => {
+    try { res.json(await doacoes.relatorioMes(req.query.mes)); }
+    catch (e) { res.status(400).json({ erro: e.message }); }
+  });
   return app;
 }

@@ -1,6 +1,5 @@
 # Documento de Projeto — Prato Cheio
 
-*Trabalho 2 · máximo 4 páginas (fora diagramas) · entrega na Aula 10*
 
 ## Decisões de projeto
 | # | Decisão | Alternativas | Requisito/risco da Análise que a motiva |
@@ -18,6 +17,9 @@
 | **Impacto no uso de dados móveis** | **Alto:** Upload e carregamento de imagens consomem significativamente a franquia de dados móveis. | **Baixo:** O tráfego de dados em texto é negligenciável para as franquias de dados dos voluntários e doadores. |
 
 ## Diagramas
+
+- [Diagrama de contexto](diagramas/contexto.md)
+- [Diagrama de dados](diagramas/dados.md)
 
 ### Diagrama de contexto
 
@@ -40,12 +42,38 @@
 - **Explicação:** A análise detalhou regras de negócio precisas para o Walking Skeleton: para simplificar o cadastro, é obrigatório enviar estritamente "tipo, quantidade e validade". Além disso, a ONG precisava aceitar as doações com "1 clique" visando velocidade. A omissão da Marta também foi um erro crítico da primeira versão da IA, uma vez que o documento a classifica como uma stakeholder de "alta" influência responsável por visualizar o gargalo logístico das doações expiradas.
 
 ## ADRs
-Ver `docs/adr/`.
+
+- [ADR 0001 — Migração SQLite para PostgreSQL](adr/0001-migracao-sqlite-postgresql.md)
+- [ADR 0002 — Isolamento do banco de testes](adr/0002-isolamento-banco-testes.md)
 
 ## Requisitos não-funcionais
 | Requisito | Como afeta o design |
 |---|---|
+| **RNF-01:** Quando a aplicação for usada no celular com conexão instável, o fluxo publicar/listar/aceitar funciona sem bibliotecas de mapas e sem imagens externas obrigatórias, medido por inspeção de `public/index.html` e execução do fluxo no navegador com rede limitada (teste manual a registrar). | D1: UI textual, sem SDK de mapas; equipe de UX paga com menos recursos visuais. |
+| **RNF-02:** Quando a suíte executar com `DATABASE_FILE` apontando para arquivo real, nenhuma operação dos testes grava nesse arquivo, medido pelos 2 testes de isolamento em `tests/seguranca-banco.test.js` e ausência/criação controlada de arquivo. | ADR 0002: banco em memória e guarda de limpeza; QA paga com manutenção dos testes de persistência separados. |
+| **RNF-03:** Quando duas ONGs tentarem aceitar a mesma doação disponível, somente a primeira mudança de estado terá sucesso e uma única ONG ficará registrada, medido pelo teste `recusa aceitar uma doação que já foi aceita` em `tests/doacoes.test.js`. | SQL atômico `UPDATE ... WHERE status='disponivel'`; equipe de backend paga com regras explícitas de transição e teste. |
+
 
 ## Critérios de validação do projeto
+| Critério (sim/não por inspeção do repositório) | Fonte |
+|---|---|
+| Existem 3 decisões com 2 alternativas e rastreabilidade? | `docs/projeto.md` → Decisões de projeto |
+| Existe tabela de trade-offs para uma decisão? | `docs/projeto.md` → Tabela de trade-offs |
+| O contexto mostra a vigilância sanitária com seta rotulada? | `docs/diagramas/contexto.md` |
+| O diagrama de dados corresponde ao schema executado? | `docs/diagramas/dados.md` e `src/db.js` |
+| Há 2 ADRs completos, incluindo migração, com validação? | `docs/adr/0001-*.md`, `docs/adr/0002-*.md` |
+| Existe teste que bloqueia limpeza fora do banco de testes? | `tests/seguranca-banco.test.js` + `src/db.js` |
+| A história de segurança e os incrementos têm critérios Dado/Quando/Então e testes? | `docs/historias-incremento.md`, `tests/incremento.test.js` |
+| O CI instala dependências, roda testes e verifica saúde? | `.github/workflows/ci.yml` |
+| A migração PostgreSQL está somente planejada para Unidade 3, com teste de equivalência previsto? | `docs/adr/0001-migracao-sqlite-postgresql.md` |
+| Há evidências de PR revisado e CI verde por integrante? | `docs/evidencias/registro-prs.md` (preencher com links reais) |
 
 ## Uso de IA
+
+A inteligência artificial foi utilizada de forma colaborativa no desenvolvimento do projeto Prato Cheio, auxiliando na elaboração dos ADRs, diagramas, documentação técnica, testes automatizados e implementação das novas funcionalidades.
+
+As alterações foram comparadas com os arquivos do repositório original para preservar o trabalho existente. Após a integração do código, foram executados 14 testes automatizados utilizando Vitest, todos aprovados.
+
+**Erro identificado e corrigido:** durante a elaboração inicial do diagrama de contexto, a IA incluiu o CI (Continuous Integration) como um sistema externo. Essa representação foi corrigida porque o CI é uma ferramenta utilizada no desenvolvimento, não um participante do processo de doação.
+
+**Limitação identificada:** as novas funcionalidades utilizam identificadores textuais de doadores e ONGs, sem autenticação real. Portanto, o sistema ainda necessita de melhorias de segurança antes de ser disponibilizado publicamente.
