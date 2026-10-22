@@ -9,7 +9,10 @@
 import { createRequire } from 'node:module';
 const { DatabaseSync } = createRequire(import.meta.url)('node:sqlite');
 
-const ARQUIVO = process.env.DATABASE_FILE || 'dados.sqlite';
+// Camada dupla: o processo Vitest SEMPRE usa um banco isolado em memória,
+// mesmo quando DATABASE_FILE é definido por uma máquina/arquivo .env externo.
+const EM_TESTE = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test';
+const ARQUIVO = EM_TESTE ? ':memory:' : (process.env.DATABASE_FILE || 'dados.sqlite');
 
 let db;
 
@@ -41,13 +44,26 @@ export async function migrar() {
       validade    TEXT NOT NULL,
       status      TEXT NOT NULL DEFAULT 'disponivel',
       ong         TEXT,
-      criada_em   TEXT NOT NULL DEFAULT (datetime('now'))
+      criada_em   TEXT NOT NULL DEFAULT (datetime('now')),
+      doador      TEXT,
+      coletada_em TEXT
     )
   `);
+  await atualizarSchemaLegado();
 }
 
-/** Apaga todos os dados. Usado pelos testes. */
+/** Acrescenta as colunas a bancos antigos sem perder doações. */
+export async function atualizarSchemaLegado() {
+  const colunas = conexao().prepare('PRAGMA table_info(doacoes)').all().map(c => c.name);
+  if (!colunas.includes('doador')) conexao().exec('ALTER TABLE doacoes ADD COLUMN doador TEXT');
+  if (!colunas.includes('coletada_em')) conexao().exec('ALTER TABLE doacoes ADD COLUMN coletada_em TEXT');
+}
+
+/** Apaga dados EXCLUSIVAMENTE em execução de testes e no SQLite em memória. */
 export async function limparBanco() {
+  if (!EM_TESTE || ARQUIVO !== ':memory:') {
+    throw new Error('limparBanco bloqueado: permitido apenas no banco de teste em memória');
+  }
   conexao().exec('DELETE FROM doacoes');
 }
 
