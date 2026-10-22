@@ -70,10 +70,10 @@
 
 ## Uso de IA
 
-A inteligência artificial foi utilizada de forma colaborativa no desenvolvimento do projeto Prato Cheio, auxiliando na elaboração dos ADRs, diagramas, documentação técnica, testes automatizados e implementação das novas funcionalidades.
+Durante o desenvolvimento do projeto Prato Cheio, utilizamos inteligência artificial como ferramenta de apoio na elaboração da documentação técnica, na organização dos ADRs, na construção dos diagramas e na implementação e revisão de funcionalidades e testes.
 
-As alterações foram comparadas com os arquivos do repositório original para preservar o trabalho existente. Após a integração do código, foram executados 14 testes automatizados utilizando Vitest, todos aprovados.
+As sugestões geradas foram analisadas e comparadas com os arquivos existentes no repositório, buscando preservar as funcionalidades já implementadas. Também realizamos a integração das alterações ao GitHub, executamos 14 testes automatizados com Vitest, todos aprovados, e validamos as alterações por meio de Pull Request revisado por outro integrante e CI aprovado.
 
-**Erro identificado e corrigido:** durante a elaboração inicial do diagrama de contexto, a IA incluiu o CI (Continuous Integration) como um sistema externo. Essa representação foi corrigida porque o CI é uma ferramenta utilizada no desenvolvimento, não um participante do processo de doação.
+**Erro identificado e corrigido:** durante a elaboração do diagrama de contexto, a IA sugeriu incluir o CI (Continuous Integration) como sistema externo. Essa representação foi corrigida, pois o CI faz parte do processo de desenvolvimento e não representa um participante do fluxo de doações.
 
-**Limitação identificada:** as novas funcionalidades utilizam identificadores textuais de doadores e ONGs, sem autenticação real. Portanto, o sistema ainda necessita de melhorias de segurança antes de ser disponibilizado publicamente.
+**Limitação identificada:** o sistema utiliza identificadores textuais de doadores e ONGs, sem autenticação real. Por isso, ainda seriam necessárias melhorias de segurança antes de sua disponibilização pública.
