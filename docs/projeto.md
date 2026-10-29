@@ -21,25 +21,7 @@
 - [Diagrama de contexto](diagramas/contexto.md)
 - [Diagrama de dados](diagramas/dados.md)
 
-### Diagrama de contexto
-
-<img width="700" height="732" alt="0e377086-f9c9-4940-a0bb-32c7311b3380" src="https://github.com/user-attachments/assets/7c36bd05-c3b2-4f0c-81e5-6d846c291a54" />
-
-### Modelo de dados
-
-<img width="700" height="1000" alt="mermaid-diagram-2026-09-24-210430" src="https://github.com/user-attachments/assets/e0642be9-c449-4459-80a6-3747ba731924" />
-
-### Revisão usando IA
-
-1. Inclusão do "Monitoramento / CI" como Sistema Externo
- 
-- **O erro:** O diagrama inicial apresentava o CI (Continuous Integration) como um ator ou sistema externo interagindo ativamente para verificar o funcionamento do sistema e receber status.
-- **Explicação:** O documento de análise menciona o CI e o GitHub Actions exclusivamente no tópico 10 como um "Critério de conclusão" técnico (para garantir que os testes automatizados passem antes do *merge* do código). O CI é uma ferramenta de desenvolvimento da equipe de engenharia e não um participante do domínio de negócio (fluxo de doação) que devesse constar em um diagrama de contexto C4 de nível 1.
- 
-2. Omissão de Stakeholders
- 
-- **O erro:** O relacionamento inicial do Doador omitia as restrições estritas dos dados, o aceite da ONG não refletia a agilidade mapeada, e a Gestora (Marta) foi totalmente omitida do diagrama.
-- **Explicação:** A análise detalhou regras de negócio precisas para o Walking Skeleton: para simplificar o cadastro, é obrigatório enviar estritamente "tipo, quantidade e validade". Além disso, a ONG precisava aceitar as doações com "1 clique" visando velocidade. A omissão da Marta também foi um erro crítico da primeira versão da IA, uma vez que o documento a classifica como uma stakeholder de "alta" influência responsável por visualizar o gargalo logístico das doações expiradas.
+**Divergências entre o modelo anterior e `src/db.js`:** (1) endereço e bairro foram previstos, mas não são persistidos; (2) o modelo previa entidades de doador e ONG, enquanto o banco guarda identificadores textuais; (3) o modelo previa rastreamento de coleta, ausente no esquema original. No incremento, foram adicionados `doador` e `coletada_em`, mas ainda não existe autenticação nem persistência de endereço/bairro. Os diagramas atuais devem representar o estado implementado.
 
 ## ADRs
 
@@ -66,14 +48,14 @@
 | A história de segurança e os incrementos têm critérios Dado/Quando/Então e testes? | `docs/historias-incremento.md`, `tests/incremento.test.js` |
 | O CI instala dependências, roda testes e verifica saúde? | `.github/workflows/ci.yml` |
 | A migração PostgreSQL está somente planejada para Unidade 3, com teste de equivalência previsto? | `docs/adr/0001-migracao-sqlite-postgresql.md` |
-| Há evidências de PR revisado e CI verde por integrante? | `docs/evidencias/registro-prs.md` (preencher com links reais) |
+| Há evidências de PR revisado e CI verde por integrante? | `docs/evidencias/registro-prs.md` (links dos PRs e revisões) |
 
 ## Uso de IA
 
-A inteligência artificial foi utilizada de forma colaborativa no desenvolvimento do projeto Prato Cheio, auxiliando na elaboração dos ADRs, diagramas, documentação técnica, testes automatizados e implementação das novas funcionalidades.
+Durante o desenvolvimento do projeto Prato Cheio, utilizamos inteligência artificial como ferramenta de apoio na elaboração da documentação técnica, na organização dos ADRs, na construção dos diagramas e na implementação e revisão de funcionalidades e testes.
 
-As alterações foram comparadas com os arquivos do repositório original para preservar o trabalho existente. Após a integração do código, foram executados 14 testes automatizados utilizando Vitest, todos aprovados.
+As sugestões geradas foram analisadas e comparadas com os arquivos existentes no repositório, buscando preservar as funcionalidades já implementadas. Também realizamos a integração das alterações ao GitHub, executamos 14 testes automatizados com Vitest, todos aprovados, e validamos as alterações por meio de Pull Request revisado por outro integrante e CI aprovado.
 
-**Erro identificado e corrigido:** durante a elaboração inicial do diagrama de contexto, a IA incluiu o CI (Continuous Integration) como um sistema externo. Essa representação foi corrigida porque o CI é uma ferramenta utilizada no desenvolvimento, não um participante do processo de doação.
+**Erro identificado e corrigido:** durante a elaboração do diagrama de contexto, a IA sugeriu incluir o CI (Continuous Integration) como sistema externo. Essa representação foi corrigida, pois o CI faz parte do processo de desenvolvimento e não representa um participante do fluxo de doações.
 
-**Limitação identificada:** as novas funcionalidades utilizam identificadores textuais de doadores e ONGs, sem autenticação real. Portanto, o sistema ainda necessita de melhorias de segurança antes de ser disponibilizado publicamente.
+**Limitação identificada:** o sistema utiliza identificadores textuais de doadores e ONGs, sem autenticação real. Por isso, ainda seriam necessárias melhorias de segurança antes de sua disponibilização pública.
