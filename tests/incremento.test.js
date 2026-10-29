@@ -54,4 +54,34 @@ describe('Incrementos do Trabalho 2', () => {
     await limparBanco();
     expect((await request(app).get('/api/doacoes')).body).toHaveLength(0);
   });
+
+  it('História 5: mantém o cancelamento no histórico do doador', async () => {
+  // Dado
+  const publicacao = await publicar('Padaria A');
+  expect(publicacao.status).toBe(201);
+  const id = publicacao.body.id;
+
+  // Quando
+  const cancelamento = await request(app)
+    .post(`/api/doacoes/${id}/cancelar`)
+    .send({ doador: 'Padaria A' });
+
+  // Então
+  expect(cancelamento.status).toBe(200);
+  expect(cancelamento.body.status).toBe('cancelada');
+
+  const historico = await request(app)
+    .get('/api/doadores/Padaria%20A/doacoes');
+
+  expect(historico.status).toBe(200);
+  expect(historico.body).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        id,
+        status: 'cancelada',
+        doador: 'Padaria A'
+      })
+    ])
+  );
+});
 });

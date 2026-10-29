@@ -181,3 +181,35 @@ O registro abaixo detalha como a IA gerou as histórias iniciais e as correçõe
     * **O que nós mudamos e por quê:** Reduzimos o escopo geográfico para "proximidade (bairro)" em formato de filtro, compondo a Fatia 2 (camada Bom/Luxo) do método hambúrguer. A busca aberta em barra de texto geraria fricção e não resolveria a proximidade.
     * **Erro mais caro:** A IA ignorou a limitação fundamental do escopo: o sistema vai rodar inicialmente apenas em **um bairro-piloto**. Não faz sentido buscar doações a nível nacional no MVP.
     * **Regra de negócio inventada:** A IA inventou que as ONGs podem solicitar frete terceirizado se a doação for de outra cidade. Quem decide sobre as políticas de frete e expansão logística é a **Marta**, mas isso não existe na fase piloto.
+
+### Fatias da História 5
+
+**Fatia 1 — Cancelar uma doação disponível**
+
+Dado que uma doação está disponível,
+quando seu doador solicita o cancelamento,
+então o status muda para "cancelada"
+e ela desaparece da lista de disponíveis.
+
+**Fatia 2 — Proteger doações já aceitas**
+
+Dado que uma ONG aceitou uma doação,
+quando o doador tenta cancelá-la,
+então o sistema recusa o cancelamento
+e mantém o status "aceita".
+
+**Fatia 3 — Impedir cancelamento por outro doador**
+
+Dado que uma doação pertence a um doador,
+quando outro identificador solicita o cancelamento,
+então o sistema recusa a operação
+e mantém a doação disponível.
+
+**Fatia futura — Marcar alimento como estragado**
+
+Dado que uma doação está disponível,
+quando o responsável informa que o alimento estragou,
+então o status passa para "estragada"
+e a doação deixa de ser oferecida às ONGs.
+
+Esta última fatia ainda depende de implementação.
