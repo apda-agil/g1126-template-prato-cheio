@@ -9,7 +9,6 @@ Conecta doadores de alimentos excedentes a ONGs, antes que a comida se perca.
 - [Guilherme Halter Nunes](https://github.com/GuilhermeHalter)
 - [João Vitor Bagatoli](https://github.com/joao-bagatoli)
 - [Larissa da Silva Costa](https://github.com/Larissa240)
-- [Vitória Milho Furtado](https://github.com/MilhoFurtado)
 - [Wedley Silva Schmoeller](https://github.com/WedleySilva)
 
 ## Como rodar
@@ -96,3 +95,13 @@ por um teste de verdade conforme implementa.
 A IA pode participar da produção, mas o grupo é responsável por verificar, testar,
 corrigir e **defender** o resultado. Registre em cada Pull Request o que foi gerado
 com IA e o que vocês alteraram.
+
+## Definição de pronto
+
+Pronto, no nosso grupo, é:
+
+- [ ] CI verde no PR — conferir na aba Checks.
+- [ ] PR aprovado por outro integrante — conferir na aba Reviews.
+- [ ] Testes passando — conferir no resultado do CI.
+- [ ] Critérios de aceite implementados — conferir no diff do PR.
+- [ ] PR documentado — conferir descrição e passos de verificação.
