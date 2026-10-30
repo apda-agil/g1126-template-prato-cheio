@@ -169,4 +169,55 @@ it('História 5: doação aceita não pode ser cancelada', async () => {
     ong: 'ONG Esperança'
   });
 });
+it('História 5: outro doador não pode cancelar a publicação', async () => {
+  // Dado
+  const criada = await publicar('Padaria A');
+  expect(criada.status).toBe(201);
+  const id = criada.body.id;
+
+  // Quando
+  const resposta = await request(app)
+    .post(`/api/doacoes/${id}/cancelar`)
+    .send({ doador: 'Mercado B' });
+
+  // Então
+  expect(resposta.status).toBe(400);
+  expect(resposta.body.erro).toContain(
+    'não pertence ao doador'
+  );
+
+  const lista = await request(app).get('/api/doacoes');
+
+  expect(lista.status).toBe(200);
+  expect(lista.body).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        id,
+        doador: 'Padaria A',
+        status: 'disponivel'
+      })
+    ])
+  );
+});
+
+it('História 5: recusa cancelamento de doação inexistente', async () => {
+  // Dado
+  const idInexistente = 999999;
+
+  // Quando
+  const resposta = await request(app)
+    .post(`/api/doacoes/${idInexistente}/cancelar`)
+    .send({ doador: 'Padaria A' });
+
+  // Então
+  expect(resposta.status).toBe(400);
+  expect(resposta.body.erro).toContain(
+    'doação inexistente'
+  );
+
+  const lista = await request(app).get('/api/doacoes');
+
+  expect(lista.status).toBe(200);
+  expect(lista.body).toEqual([]);
+});
 });
