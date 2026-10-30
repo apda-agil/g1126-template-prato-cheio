@@ -84,4 +84,89 @@ describe('Incrementos do Trabalho 2', () => {
     ])
   );
 });
+it('História 5: cancelamento preserva dados originais', async () => {
+  // Dado
+  const criada = await publicar('Padaria A');
+  expect(criada.status).toBe(201);
+  const doacao = criada.body;
+ 
+  // Quando
+  const resposta = await request(app)
+    .post(`/api/doacoes/${doacao.id}/cancelar`)
+    .send({ doador: 'Padaria A' });
+ 
+  // Então
+  expect(resposta.status).toBe(200);
+ 
+  expect(resposta.body).toMatchObject({
+    id: doacao.id,
+    tipo: 'Pão',
+    quantidade: '10 unidades',
+    validade: '2026-12-01',
+    doador: 'Padaria A',
+    status: 'cancelada'
+  });
+});
+ 
+it('História 5: doação cancelada não pode ser aceita', async () => {
+  // Dado
+  const criada = await publicar();
+  const id = criada.body.id;
+ 
+  const cancelamento = await request(app)
+    .post(`/api/doacoes/${id}/cancelar`)
+    .send({ doador: 'Padaria A' });
+ 
+  expect(cancelamento.status).toBe(200);
+ 
+  // Quando
+  const resposta = await request(app)
+    .post(`/api/doacoes/${id}/aceitar`)
+    .send({ ong: 'ONG Esperança' });
+ 
+  // Então
+  expect(resposta.status).toBe(400);
+  expect(resposta.body.erro).toContain(
+    'não está disponível'
+  );
+ 
+  const historico = await request(app)
+    .get('/api/doadores/Padaria%20A/doacoes');
+ 
+  const doacao = historico.body.find(d => d.id === id);
+  expect(doacao.status).toBe('cancelada');
+  expect(doacao.ong).toBeNull();
+});
+ 
+it('História 5: doação aceita não pode ser cancelada', async () => {
+  // Dado
+  const criada = await publicar();
+  const id = criada.body.id;
+ 
+  const aceite = await request(app)
+    .post(`/api/doacoes/${id}/aceitar`)
+    .send({ ong: 'ONG Esperança' });
+ 
+  expect(aceite.status).toBe(200);
+ 
+  // Quando
+  const resposta = await request(app)
+    .post(`/api/doacoes/${id}/cancelar`)
+    .send({ doador: 'Padaria A' });
+ 
+  // Então
+  expect(resposta.status).toBe(400);
+  expect(resposta.body.erro).toContain('já aceita');
+ 
+  const historico = await request(app)
+    .get('/api/doadores/Padaria%20A/doacoes');
+ 
+  const doacao = historico.body.find(d => d.id === id);
+ 
+  expect(doacao).toMatchObject({
+    id,
+    status: 'aceita',
+    ong: 'ONG Esperança'
+  });
+});
 });
