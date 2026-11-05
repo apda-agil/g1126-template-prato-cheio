@@ -27,3 +27,42 @@ Na Unidade 3: `npm test` deve continuar passando com PostgreSQL em um banco **ex
 
 ## Revisão — 2026-10-19
 **Mudou:** testes executados na máquina do piloto podem apontar para o banco real e apagar todas as doações. **Decisão continua válida:** adiar o PostgreSQL não justifica manter o risco; o banco de testes passou a ser determinado pelo próprio processo de teste, com limpeza recusada fora de execução de testes (ADR 0002). Migração ainda é da Unidade 3. As seções originais acima registram a decisão nova desta entrega; esta revisão explicita sua relação com a mudança de contexto.
+
+
+## Registro de implementação — 05/11/2026
+
+A migração do código de SQLite para PostgreSQL foi realizada na Unidade 3 do projeto Prato Cheio.
+
+### Alterações realizadas
+
+- Substituição do SQLite pelo PostgreSQL em `src/db.js`.
+- Adaptação das consultas SQL em `src/repositorio.js`.
+- Configuração do PostgreSQL 16 com Docker Compose.
+- Criação de um banco exclusivo para testes.
+- Atualização das variáveis de ambiente.
+- Adaptação dos testes automatizados.
+- Configuração do GitHub Actions para PostgreSQL.
+
+### Consequências
+
+A aplicação passou a utilizar um banco de dados cliente-servidor, permitindo melhor suporte a acessos simultâneos.
+
+A mudança também exige configuração do PostgreSQL, manutenção das credenciais e cuidados com backups.
+
+### Validação
+
+A validação deverá ser realizada pelos comandos:
+
+- `docker compose up -d`
+- `npm install`
+- `npm run db:migrar`
+- `npm test`
+- `npm start`
+
+A aprovação dos testes e da integração contínua ainda depende da execução e verificação dos resultados.
+
+### Observações
+
+A migração do código e do esquema não transfere automaticamente os registros existentes no SQLite.
+
+O banco de testes é separado do banco principal para evitar exclusões acidentais.
