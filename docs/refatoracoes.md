@@ -2,15 +2,21 @@
 
 *Trabalho 3 · uma seção por refatoração · o que importa é o motivo e a evidência*
 
-## Refatoração 1 — Migração de SQLite para PostgreSQL
+### Refatoração 1 — Migração SQLite para PostgreSQL
 
-- **Motivo:** (o que a decidiu — ver o ADR da Unidade 2)
-- **O que mudou:** (arquivos e o que neles)
-- **O que NÃO mudou:** (as regras de negócio? as rotas? os testes?)
-- **Evidência de que o comportamento se manteve:**
-  - testes antes da mudança: ___ passando
-  - testes depois da mudança: ___ passando
-  - link da execução do CI verde:
+**Motivo:** Implementar a decisão arquitetural registrada no ADR 0001, preparando o sistema para acessos simultâneos e utilização de um banco cliente-servidor.
+
+**O que mudou:** Substituição do SQLite pelo PostgreSQL, adaptação das consultas SQL, configuração do Docker e atualização da integração contínua.
+
+**O que não mudou:** As regras de negócio de publicação, aceitação, cancelamento e coleta de doações foram preservadas.
+
+**Testes antes da migração:** A confirmar na execução anterior com SQLite.
+
+**Testes depois da migração:** 21 testes aprovados, distribuídos em 3 arquivos.
+
+**Evidência do CI:** https://github.com/apda-agil/g1126-template-prato-cheio/actions/runs/42128228460/job/127597840145
+
+**Status:** Migração implementada, com execução do CI aprovada. Pendente confirmar a execução sobre o commit final da migração.
 
 ## Refatoração 2 — (nome)
 
@@ -76,7 +82,7 @@ Também será necessário verificar se o GitHub Actions conclui o pipeline sem e
 
 - Testes antes da migração: a preencher.
 - Testes após a migração: aguardando execução.
-- GitHub Actions: aguardando validação. https://github.com/apda-agil/g1126-template-prato-cheio/actions/runs/42128228460/job/127597840145
+- GitHub Actions: aguardando validação. 
 
 ### Limitações
 
