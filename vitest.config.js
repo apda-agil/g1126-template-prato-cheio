@@ -1,6 +1,8 @@
+
 export default {
   test: {
-    // SQLite em memória: os testes não tocam o arquivo do banco de desenvolvimento.
-    env: { DATABASE_FILE: ':memory:' }
+    // Os arquivos de teste compartilham um banco exclusivo; executar sequencialmente.
+    fileParallelism: false,
+    testTimeout: 15000
   }
 };

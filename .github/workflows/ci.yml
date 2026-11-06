@@ -1,56 +1,58 @@
+
 name: CI
 
-# Roda a cada push e a cada Pull Request.
-# O PR só deve ser integrado com este check verde.
 on:
   push:
-    branches: [main]
+    branches: [main, migracao-postgresql]
   pull_request:
 
 jobs:
   build-e-testes:
     runs-on: ubuntu-latest
 
-    # ---------------------------------------------------------------------
-    # UNIDADE 3 — quando migrarem para PostgreSQL, descomentem este bloco e
-    # a variável DATABASE_URL abaixo. Na Unidade 1 o banco é SQLite em
-    # memória, então o CI não precisa de serviço nenhum.
-    #
-    # services:
-    #   postgres:
-    #     image: postgres:16-alpine
-    #     env:
-    #       POSTGRES_USER: pratocheio
-    #       POSTGRES_PASSWORD: pratocheio
-    #       POSTGRES_DB: pratocheio
-    #     ports:
-    #       - 5432:5432
-    #     options: >-
-    #       --health-cmd="pg_isready -U pratocheio"
-    #       --health-interval=5s
-    #       --health-timeout=3s
-    #       --health-retries=10
-    #
-    # env:
-    #   DATABASE_URL: postgres://pratocheio:pratocheio@localhost:5432/pratocheio
-    # ---------------------------------------------------------------------
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: prato_cheio
+          POSTGRES_PASSWORD: prato_cheio
+          POSTGRES_DB: prato_cheio
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U prato_cheio -d prato_cheio"
+          --health-interval=5s
+          --health-timeout=3s
+          --health-retries=10
+
+    env:
+      DATABASE_URL: postgresql://prato_cheio:prato_cheio@localhost:5432/prato_cheio
+      DATABASE_TEST_URL: postgresql://prato_cheio:prato_cheio@localhost:5432/prato_cheio_test
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Baixar codigo do repositorio
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
 
-      - name: Instalar dependências
+      - name: Instalar dependencias
         run: npm ci
 
-      - name: Rodar os testes
+      - name: Criar banco de testes
+        run: |
+          PGPASSWORD=prato_cheio psql -h localhost -U prato_cheio -d prato_cheio -c 'CREATE DATABASE prato_cheio_test;'
+
+      - name: Executar testes
         run: npm test
 
-      - name: Verificar se a aplicação sobe
+      - name: Verificar inicializacao da aplicacao
         run: |
           npm start &
-          sleep 3
-          curl --fail http://localhost:3000/api/saude
+          for i in {1..15}; do
+            curl --fail http://localhost:3000/api/saude && exit 0
+            sleep 2
+          done
+          exit 1

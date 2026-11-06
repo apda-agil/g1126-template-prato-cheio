@@ -59,3 +59,40 @@ As sugestões geradas foram analisadas e comparadas com os arquivos existentes n
 **Erro identificado e corrigido:** durante a elaboração do diagrama de contexto, a IA sugeriu incluir o CI (Continuous Integration) como sistema externo. Essa representação foi corrigida, pois o CI faz parte do processo de desenvolvimento e não representa um participante do fluxo de doações.
 
 **Limitação identificada:** o sistema utiliza identificadores textuais de doadores e ONGs, sem autenticação real. Por isso, ainda seriam necessárias melhorias de segurança antes de sua disponibilização pública.
+
+
+## Estado da implementação PostgreSQL (05/11/2026)
+
+A persistência do sistema Prato Cheio foi migrada de SQLite para PostgreSQL, conforme a decisão registrada no ADR 0001.
+
+### Alterações realizadas
+
+- Substituição do SQLite pelo PostgreSQL utilizando a biblioteca `pg`.
+- Adaptação das consultas SQL em `src/repositorio.js`.
+- Configuração do PostgreSQL 16 com Docker Compose.
+- Separação do banco principal e do banco de testes.
+- Atualização das configurações de ambiente.
+- Adaptação dos testes automatizados com Vitest.
+- Configuração do GitHub Actions para utilizar PostgreSQL.
+
+### Justificativa da migração
+
+A migração foi realizada para permitir melhor suporte a acessos simultâneos, utilizar um banco de dados cliente-servidor e preparar o sistema para futuras melhorias.
+
+### Rastreabilidade
+
+A implementação atende à decisão registrada no ADR 0001 e atualiza a estratégia de isolamento de testes documentada no ADR 0002.
+
+O requisito RNF-02, originalmente definido para SQLite em memória, deverá ser atualizado para refletir a utilização de um banco PostgreSQL exclusivo para testes.
+
+### Validação
+
+A migração será validada por meio da criação do esquema PostgreSQL, execução dos testes automatizados e verificação do GitHub Actions.
+
+Os resultados deverão ser registrados após a execução.
+
+### Limitações
+
+A migração do código não transfere automaticamente os dados antigos do SQLite.
+
+O sistema continua utilizando identificadores textuais de doadores e ONGs, sem autenticação real.

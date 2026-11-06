@@ -1,3 +1,4 @@
+
 # Diagrama de contexto — Prato Cheio
 
 **Pergunta:** Quem interage com o Prato Cheio e para qual finalidade?
@@ -13,7 +14,7 @@ flowchart LR
     VOL[Voluntário] -->|confirma coleta pela ONG| S
     M[Marta] -->|consulta totais mensais| S
     VS[Vigilância sanitária] -->|exige tipo, quantidade e validade| S
-    S -->|persiste dados| DB[(SQLite)]
+    S -->|persiste dados| DB[(PostgreSQL)]
 ```
 
 **Limitação:** os papéis são representados por identificadores enviados pelo cliente; não há autenticação ou autorização de produção.
