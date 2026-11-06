@@ -11,6 +11,24 @@ const url = EM_TESTE
 
 let pool;
 
+
+function identificarBanco(connectionString) {
+  const parsed = new URL(connectionString);
+
+  if (!['postgres:', 'postgresql:'].includes(parsed.protocol)) {
+    throw new Error('URL do PostgreSQL inválida');
+  }
+
+  const banco = decodeURIComponent(parsed.pathname.slice(1));
+
+  return {
+    host: parsed.hostname.toLowerCase(),
+    porta: parsed.port || '5432',
+    banco
+  };
+}
+
+
 function configuracao() {
   if (!url) {
     throw new Error(EM_TESTE
@@ -28,13 +46,22 @@ function configuracao() {
     const nome = decodeURIComponent(parsed.pathname.slice(1));
     const producao = process.env.DATABASE_URL;
 
-    if (!/(_test|_teste|_tests|_testes)$/.test(nome)) {
-      throw new Error('Banco de testes bloqueado: o nome deve terminar em _test ou _teste');
-    }
+    
+if (producao) {
+  const teste = identificarBanco(url);
+  const aplicacao = identificarBanco(producao);
 
-    if (producao && url === producao) {
-      throw new Error('Banco de testes não pode ser o banco da aplicação');
-    }
+  if (
+    teste.host === aplicacao.host &&
+    teste.porta === aplicacao.porta &&
+    teste.banco === aplicacao.banco
+  ) {
+    throw new Error(
+      'Banco de testes bloqueado: não pode ser o banco da aplicação'
+    );
+  }
+}
+
   }
 
   return { connectionString: url };

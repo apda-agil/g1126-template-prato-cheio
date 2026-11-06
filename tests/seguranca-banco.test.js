@@ -57,4 +57,32 @@ describe('isolamento dos bancos PostgreSQL', () => {
 
     expect(p.status, p.stderr).toBe(0);
   });
+
+  
+describe('proteção contra URLs equivalentes', () => {
+  it('bloqueia a mesma base com credenciais e parâmetros diferentes', () => {
+    const p = subprocesso(
+      `import { limparBanco } from './src/db.js';
+       try {
+         await limparBanco();
+         process.exit(10);
+       } catch(e) {
+         if (!/bloqueado/.test(e.message)) {
+           process.exit(11);
+         }
+       }`,
+      {
+        NODE_ENV: 'test',
+        VITEST: 'true',
+        DATABASE_URL:
+          'postgres://app:senha@localhost:5432/prato_cheio_test',
+        DATABASE_TEST_URL:
+          'postgresql://tester:outra@localhost/prato_cheio_test?application_name=vitest'
+      }
+    );
+
+    expect(p.status, p.stderr).toBe(0);
+  });
+});
+
 });
