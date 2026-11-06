@@ -76,7 +76,7 @@ Também será necessário verificar se o GitHub Actions conclui o pipeline sem e
 
 - Testes antes da migração: a preencher.
 - Testes após a migração: aguardando execução.
-- GitHub Actions: aguardando validação.
+- GitHub Actions: aguardando validação. https://github.com/apda-agil/g1126-template-prato-cheio/actions/runs/42128228460/job/127597840145
 
 ### Limitações
 
