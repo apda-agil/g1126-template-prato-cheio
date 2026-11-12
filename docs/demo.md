@@ -101,17 +101,17 @@ Explicar que:
 
 ## Testado por
 
-**Nome do integrante:** [preencher após o teste]
+**Nome do integrante:** Wedley Silva Schmoeller
 
-**Data:** [preencher após o teste]
+**Data:** 12/11/2026
 
-**Executou sem ajuda:** [Sim/Não]
+**Executou sem ajuda:** Sim
 
-**Resultado:** [Aprovado/Parcial/Reprovado]
+**Resultado:** Aprovado
 
-**Dificuldades encontradas:** [preencher]
+**Dificuldades encontradas:** Nenhum
 
-**Alterações realizadas no roteiro:** [preencher]
+**Alterações realizadas no roteiro:** Nenhum
 
 ## Evidências
 
