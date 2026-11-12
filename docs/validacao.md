@@ -59,17 +59,50 @@ Os critérios não atendidos continuam registrados como pendências para evoluç
 
 ## Evidências de testes
 
-O projeto possui testes automatizados desenvolvidos com Vitest e Supertest.
+A validação foi realizada com testes automatizados
+utilizando Vitest e Supertest.
 
-Na execução apresentada anteriormente pela equipe, foram aprovados 21 testes, distribuídos em 3 arquivos.
+### Testes da migração PostgreSQL
 
-**Evidência do GitHub Actions:**
+- Testes executados: 24
+- Testes aprovados: 24
+- Arquivos de teste: 4
+- Resultado: aprovado
 
-https://github.com/apda-agil/g1126-template-prato-cheio/actions/runs/42128228460/job/127597840145
+Evidência:
+https://github.com/apda-agil/g1126-template-prato-cheio/actions/runs/43332028275/job/131578813262?pr=11
+<img width="1347" height="416" alt="evidencia" src="https://github.com/user-attachments/assets/10f6c928-1d78-4cea-b7d4-ead0763b0d68" />
 
-A execução final da Entrega 3 ainda deve ser conferida após a integração das alterações na `main`.
+### Testes adicionais da Entrega 3
 
-A aprovação da suíte comprova os cenários automatizados, mas não significa que todos os critérios da Unidade 1 foram atendidos.
+Foram adicionados dois testes no arquivo
+`tests/validacao-entrega3.test.js`.
+
+Os novos testes verificam:
+
+1. A listagem das doações em ordem de publicação.
+2. A preservação das doações existentes após
+   uma tentativa de publicação inválida.
+
+**Resultado:** aguardando confirmação no GitHub Actions.
+
+**Total esperado:** 24 testes aprovados.
+
+**Evidência da Entrega 3:** https://github.com/apda-agil/g1126-template-prato-cheio/actions/runs/43332028275/job/131578813262?pr=11
+
+### Limitações da validação
+
+A aprovação dos testes automatizados não comprova
+que todos os critérios de aceite foram atendidos.
+
+Continuam pendentes:
+
+- Registro do horário de aceite da doação.
+- Painel semanal de doações expiradas.
+- Tratamento de ausência de dados no painel semanal.
+
+Essas limitações estão detalhadas na tabela de
+critérios de aceite deste documento.
 
 ## Uso de IA
 
