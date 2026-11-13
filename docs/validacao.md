@@ -1,23 +1,129 @@
+
 # Validação — Prato Cheio
 
-*Trabalho 3 · confronto do produto com os critérios de aceite escritos na Unidade 1*
+**Trabalho 3 — Engenharia de Software**
 
-Copie aqui os critérios de aceite do seu `docs/analise.md` e marque um por um. **Um "não atende" bem justificado vale mais que um "sim" sem evidência.**
+## Objetivo
 
-| # | Critério de aceite (da Unidade 1) | Atende? | Evidência |
-|:--:|---|:--:|---|
-| 1 |  | sim / parcial / não | teste, demo, execução do CI |
-| 2 |  |  |  |
-| 3 |  |  |  |
+Verificar se o sistema Prato Cheio atende aos critérios de aceite definidos na Unidade 1, conforme o arquivo `docs/analise.md`.
 
-## Critérios que não atendem — por quê
+A validação considera o código implementado, os testes automatizados e as funcionalidades disponíveis na aplicação.
 
-(Para cada "parcial" ou "não": o que falta, por que ficou de fora e o que seria necessário.)
+## Critérios de aceite
+
+| # | Critério de aceite (Unidade 1) | Atende? | Evidência |
+|---|---|---|---|
+| 1 | Ao publicar uma doação com tipo, quantidade e validade, ela aparece na lista de disponíveis com os três dados em texto. | Sim | `tests/doacoes.test.js` — teste de publicação e listagem. |
+| 2 | Ao publicar uma doação sem validade, o sistema retorna HTTP 400 e não inclui a doação na lista. | Sim | `tests/doacoes.test.js` — teste de campos obrigatórios. |
+| 3 | A ONG consulta as doações disponíveis, com tipo, quantidade e validade, em ordem de publicação. | Sim | `src/repositorio.js`, função `listarDisponiveis()`, ordenada por ID crescente. A ordenação deve ser confirmada com múltiplas doações. |
+| 4 | Ao aceitar uma doação com um clique, ela sai da lista e o horário do aceite da ONG é registrado. | Parcial | `tests/doacoes.test.js` comprova o aceite e a remoção da lista. Não foi identificado registro específico do horário do aceite. |
+| 5 | Uma segunda ONG não consegue aceitar uma doação já reservada pela primeira ONG. | Sim | `tests/doacoes.test.js` — teste de recusa de segundo aceite. |
+| 6 | O painel semanal apresenta o total de doações expiradas sem coleta. | Não | Não foi identificada implementação de painel ou consulta semanal de doações expiradas. |
+| 7 | O painel semanal apresenta zero ou "sem dados" quando não existem doações expiradas. | Não | O painel semanal ainda não foi implementado. |
+
+## Critérios parciais ou não atendidos
+
+### Critério 4 — Registro do horário do aceite
+
+O sistema permite que uma ONG aceite uma doação e impede que ela continue disponível para outras ONGs.
+
+Entretanto, o código atual não registra um campo específico com o horário do aceite.
+
+Para atender integralmente ao critério, seria necessário adicionar um campo como `aceita_em` ao banco PostgreSQL, registrar o horário durante a aceitação e criar um teste para verificar esse comportamento.
+
+### Critério 6 — Painel semanal de doações expiradas
+
+O sistema possui um relatório mensal de doações aceitas, mas não apresenta a contagem semanal de doações expiradas sem coleta.
+
+Essa funcionalidade ficou fora da implementação atual.
+
+Para atender ao critério, seria necessário identificar as doações com validade vencida e sem coleta, consultar os registros da semana e disponibilizar o resultado no painel.
+
+### Critério 7 — Painel sem dados
+
+Como o painel semanal de doações expiradas não foi implementado, também não existe tratamento específico para mostrar zero ou "sem dados".
+
+Seria necessário implementar o painel e adicionar testes para situações sem registros.
 
 ## Mudanças de critério ao longo do semestre
 
-(Algum critério da Unidade 1 se mostrou errado ou impossível? Qual, e o que aprenderam com isso.)
+A equipe adotou inicialmente uma fatia mínima do sistema, priorizando a publicação, a listagem e a aceitação de doações.
+
+Durante o desenvolvimento, foram acrescentadas funcionalidades como cancelamento, histórico do doador, confirmação de coleta e relatório mensal de aceites.
+
+Essas funcionalidades ampliaram o sistema, mas não substituem os critérios originais da Unidade 1.
+
+A migração de SQLite para PostgreSQL também foi realizada sem a intenção de alterar as regras de negócio.
+
+Os critérios não atendidos continuam registrados como pendências para evolução do produto.
+
+## Evidências de testes
+
+A validação foi realizada com testes automatizados
+utilizando Vitest e Supertest.
+
+### Testes da migração PostgreSQL
+
+- Testes executados: 24
+- Testes aprovados: 24
+- Arquivos de teste: 4
+- Resultado: aprovado
+
+Evidência:
+https://github.com/apda-agil/g1126-template-prato-cheio/actions/runs/43332028275/job/131578813262?pr=11
+<img width="1347" height="416" alt="evidencia" src="https://github.com/user-attachments/assets/10f6c928-1d78-4cea-b7d4-ead0763b0d68" />
+
+### Testes adicionais da Entrega 3
+
+Foram adicionados dois testes no arquivo
+`tests/validacao-entrega3.test.js`.
+
+Os novos testes verificam:
+
+1. A listagem das doações em ordem de publicação.
+2. A preservação das doações existentes após
+   uma tentativa de publicação inválida.
+
+**Resultado:** aguardando confirmação no GitHub Actions.
+
+**Total esperado:** 24 testes aprovados.
+
+**Evidência da Entrega 3:** https://github.com/apda-agil/g1126-template-prato-cheio/actions/runs/43332028275/job/131578813262?pr=11
+
+### Limitações da validação
+
+A aprovação dos testes automatizados não comprova
+que todos os critérios de aceite foram atendidos.
+
+Continuam pendentes:
+
+- Registro do horário de aceite da doação.
+- Painel semanal de doações expiradas.
+- Tratamento de ausência de dados no painel semanal.
+
+Essas limitações estão detalhadas na tabela de
+critérios de aceite deste documento.
 
 ## Uso de IA
 
-(O que foi gerado com IA nesta iteração, o que vocês verificaram e o que alteraram.)
+O ChatGPT foi utilizado para auxiliar na comparação entre os critérios de aceite, o código implementado e os testes automatizados.
+
+A ferramenta ajudou a organizar a tabela de validação, identificar critérios parcialmente atendidos e descrever as pendências.
+
+As conclusões foram elaboradas a partir dos arquivos `docs/analise.md`, `src/doacoes.js`, `src/repositorio.js` e dos testes existentes.
+
+A execução prática e as evidências finais devem ser verificadas pela equipe.
+
+## Conclusão
+
+Dos 7 critérios de aceite definidos na Unidade 1:
+
+- 4 foram identificados como atendidos no código.
+- 1 foi identificado como parcialmente atendido.
+- 2 foram identificados como não atendidos.
+
+A validação prática e a execução final dos testes ainda devem confirmar os resultados.
+
+O fluxo principal de publicação, listagem e aceitação de doações está implementado.
+
+As principais pendências são o registro do horário do aceite e o painel semanal de doações expiradas.
