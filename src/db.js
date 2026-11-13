@@ -46,6 +46,12 @@ function configuracao() {
     const nome = decodeURIComponent(parsed.pathname.slice(1));
     const producao = process.env.DATABASE_URL;
 
+    if (!/(_test|_teste|_tests|_testes)$/.test(nome)) {
+      throw new Error(
+        'Banco de testes bloqueado: o nome deve terminar em _test ou _teste'
+      );
+    }
+
     
 if (producao) {
   const teste = identificarBanco(url);
