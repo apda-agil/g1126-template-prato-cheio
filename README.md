@@ -42,46 +42,61 @@ Para executar o projeto, é necessário instalar:
 - Docker Desktop com Docker Compose
 - Git (opcional)
 
+
 ## Como executar
 
 ### 1. Clonar o repositório
 
-Clone o repositório pelo GitHub ou baixe o projeto em ZIP.
+Em uma pasta nova, execute:
 
-Abra a pasta do projeto no VS Code.
+```bash
+git clone https://github.com/apda-agil/g1126-template-prato-cheio.git
+cd g1126-template-prato-cheio
+```
 
-### 2. Configurar as variáveis de ambiente
+Para testar uma branch específica, selecione-a com
+`git switch nome-da-branch`.
 
-No terminal PowerShell, execute:
+### 2. Configurar o ambiente
+
+É necessário utilizar Node.js 22.13 ou superior e
+Docker Desktop com Docker Compose funcionando.
+
+No PowerShell, execute:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-O arquivo .env terá as conexões:
+O arquivo .env deve conter as conexões PostgreSQL
+correspondentes à configuração do compose.yaml.
 
-DATABASE_URL=postgresql://prato_cheio:prato_cheio@localhost:5432/prato_cheio
-
-DATABASE_TEST_URL=postgresql://prato_cheio:prato_cheio@localhost:5432/prato_cheio_test
+O arquivo .env não deve ser enviado para o GitHub.
 
 ### 3. Iniciar o PostgreSQL
-
-Execute:
 
 ```bash
 docker compose up -d
 ```
 
-O Docker iniciará o PostgreSQL e, na primeira inicialização de um volume vazio, criará os bancos:
+Verifique o estado do serviço:
 
-- prato_cheio: banco principal
-- prato_cheio_test: banco exclusivo para testes
+```bash
+docker compose ps
+```
+
+Resultado esperado: serviço postgres com status
+Up (healthy).
 
 ### 4. Instalar as dependências
 
 ```bash
-npm install
+npm ci
 ```
+
+O npm ci instala as versões registradas no
+package-lock.json, permitindo uma instalação
+reproduzível.
 
 ### 5. Criar as tabelas
 
@@ -89,15 +104,70 @@ npm install
 npm run db:migrar
 ```
 
-### 6. Iniciar o sistema
+Resultado esperado: mensagem "schema criado".
+
+### 6. Iniciar a aplicação
 
 ```bash
 npm start
 ```
 
-Acesse:
+No navegador, acesse:
 
 http://localhost:3000
+
+Resultado esperado: a página inicial do Prato Cheio
+é carregada.
+
+### 7. Verificar as funcionalidades
+
+Na interface do sistema:
+
+1. Publicar uma doação com tipo, quantidade e validade.
+2. Verificar se a doação aparece na lista.
+3. Aceitar a doação como ONG.
+4. Confirmar que ela não aparece mais entre as disponíveis.
+
+### 8. Encerrar o ambiente
+
+Para interromper a aplicação, pressione Ctrl+C
+no terminal em que o servidor está executando.
+
+Para parar o PostgreSQL:
+
+```bash
+docker compose down
+```
+
+Esse comando mantém o volume persistente do banco.
+
+## Verificação de clone limpo
+
+O teste de clone limpo deve ser realizado por um
+integrante que não escreveu estas instruções.
+
+O integrante deverá:
+
+1. Clonar o repositório em uma pasta nova.
+2. Seguir somente as instruções do README.
+3. Configurar o PostgreSQL.
+4. Iniciar a aplicação.
+5. Publicar e aceitar uma doação.
+6. Registrar erros, dificuldades e ajustes necessários.
+
+### Registro da verificação
+
+**Testado por:** [preencher após execução]
+
+**Data:** [preencher após execução]
+
+**Resultado:** [Aprovado / Parcial / Reprovado]
+
+**Dificuldades encontradas:** [preencher]
+
+**Correções realizadas:** [preencher]
+
+**Evidência:** [link ou captura do teste]
 
 ## Executar os testes
 
