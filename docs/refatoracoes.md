@@ -51,3 +51,55 @@ PENDENTE — executar os testes e adicionar o link do CI verde.
 
 **Limitações:**
 Aliases de DNS e configurações indiretas ainda podem apontar para o mesmo servidor. O banco de testes deve continuar isolado do banco de produção.
+
+
+## Evidências finais — Entrega 3
+
+### Refatoração 1 — Migração SQLite para PostgreSQL
+
+**Motivo:** Decisão arquitetural registrada no ADR 0001.
+
+**Alterações realizadas:**
+- Migração da persistência para PostgreSQL.
+- Adaptação das consultas SQL.
+- Configuração do GitHub Actions com PostgreSQL.
+- Preservação das regras de negócio.
+
+**Testes antes da migração:** [preencher com a evidência da versão SQLite]
+
+**Testes após a migração:** 21 testes aprovados em 3 arquivos.
+
+**Evidência do CI:**
+https://github.com/apda-agil/g1126-template-prato-cheio/actions/runs/42128228460/job/127597840145
+
+**Pull Request:**
+https://github.com/apda-agil/g1126-template-prato-cheio/pull/10
+
+### Refatoração 2 — [nome da refatoração registrada]
+
+**Problema identificado:** [descrever o cheiro de código e a dificuldade concreta]
+
+**O que mudou:** [descrever a alteração implementada]
+
+**Testes antes:** [quantidade e evidência]
+
+**Testes depois:** [quantidade e evidência]
+
+**Pull Request:** [inserir link]
+
+### Correção complementar — Proteção do banco de testes
+
+Na Entrega 3, foi reforçada a validação do nome do banco PostgreSQL utilizado nos testes.
+
+A configuração passou a rejeitar bancos que não possuem um sufixo de teste permitido.
+
+Também foi criado um teste automatizado específico para verificar esse bloqueio.
+
+Arquivos alterados:
+- `src/db.js`
+- `tests/protecao-banco-entrega3.test.js`
+
+**Resultado dos testes:** [preencher após executar o CI]
+
+**Evidência:** [inserir link da execução]
+
