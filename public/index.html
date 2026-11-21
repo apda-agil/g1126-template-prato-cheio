@@ -3,75 +3,47 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Prato Cheio</title>
+  <title>Prato Cheio — doações</title>
   <style>
-    body { font-family: system-ui, sans-serif; margin: 0; padding: 1rem; max-width: 40rem; }
-    h1 { font-size: 1.3rem; }
-    fieldset { border: 1px solid #ccc; border-radius: .5rem; margin-bottom: 1rem; }
-    label { display: block; margin: .5rem 0 .2rem; font-size: .9rem; }
-    input, button { font-size: 1rem; padding: .6rem; width: 100%; box-sizing: border-box; }
-    button { margin-top: .8rem; cursor: pointer; }
-    li { border: 1px solid #ddd; border-radius: .5rem; padding: .6rem; margin-bottom: .5rem; list-style: none; }
-    ul { padding: 0; }
+    *{box-sizing:border-box}body{font-family:system-ui,sans-serif;margin:auto;max-width:780px;padding:18px;background:#f7f9f6;color:#182a21}
+    h1{color:#246345}fieldset,section{border:1px solid #d7e2d7;border-radius:12px;margin:14px 0;padding:15px;background:white}
+    legend{font-weight:700}label{display:block;margin:8px 0 4px}input,button{width:100%;padding:10px;font:inherit;border-radius:7px}
+    input{border:1px solid #8a9a8a}button{background:#246345;border:0;color:white;cursor:pointer;margin-top:7px}
+    button.secondary{background:#496c80}button.danger{background:#9b503e}li{padding:12px;border-bottom:1px solid #ddd;list-style:none}
+    ul{padding:0}small{color:#455a4a}#mensagem{min-height:22px;font-weight:600} .actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px}
   </style>
 </head>
 <body>
-  <h1>Prato Cheio</h1>
-
-  <fieldset>
-    <legend>Publicar doação</legend>
-    <label for="tipo">Tipo de alimento</label>
-    <input id="tipo" placeholder="Ex.: sopa, pão, frutas">
-    <label for="quantidade">Quantidade</label>
-    <input id="quantidade" placeholder="Ex.: 10 porções">
-    <label for="validade">Validade / retirar até</label>
-    <input id="validade" type="date">
-    <button id="publicar">Publicar</button>
-  </fieldset>
-
-  <h2>Doações disponíveis</h2>
-  <ul id="lista"></ul>
-
-  <script>
-    async function carregar() {
-      const res = await fetch('/api/doacoes');
-      const doacoes = await res.json();
-      const lista = document.getElementById('lista');
-      lista.innerHTML = doacoes.length
-        ? ''
-        : '<li>Nenhuma doação disponível.</li>';
-      for (const d of doacoes) {
-        const li = document.createElement('li');
-        li.textContent = `${d.tipo} — ${d.quantidade} (até ${d.validade}) `;
-        const botao = document.createElement('button');
-        botao.textContent = 'Aceitar';
-        botao.onclick = async () => {
-          await fetch(`/api/doacoes/${d.id}/aceitar`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ong: 'Minha ONG' })
-          });
-          carregar();
-        };
-        li.appendChild(botao);
-        lista.appendChild(li);
-      }
-    }
-
-    document.getElementById('publicar').onclick = async () => {
-      await fetch('/api/doacoes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tipo: document.getElementById('tipo').value,
-          quantidade: document.getElementById('quantidade').value,
-          validade: document.getElementById('validade').value
-        })
-      });
-      carregar();
-    };
-
-    carregar();
-  </script>
-</body>
-</html>
+<h1>Prato Cheio</h1><p>Conectando doadores de alimentos a ONGs.</p>
+<p id="mensagem" role="status" aria-live="polite"></p>
+<fieldset><legend>Publicar doação</legend>
+<label for="doador">Doador (obrigatório)</label><input id="doador" placeholder="Padaria Pão Bom">
+<label for="tipo">Tipo de alimento</label><input id="tipo" placeholder="Arroz">
+<label for="quantidade">Quantidade</label><input id="quantidade" placeholder="10 pacotes">
+<label for="validade">Validade</label><input id="validade" type="date">
+<button id="publicar">Publicar</button></fieldset>
+<section><h2>Doações disponíveis</h2><label for="ong">ONG responsável</label><input id="ong" value="Casa Esperança"><ul id="lista"></ul></section>
+<section><h2>Minhas doações</h2><label for="consulta">Nome do doador</label><input id="consulta" placeholder="Padaria Pão Bom"><button id="consultar" class="secondary">Consultar histórico</button><ul id="historico"></ul></section>
+<section><h2>Coleta e devolução pela ONG</h2>
+<label for="id-doacao">ID da doação aceita</label><input id="id-doacao" inputmode="numeric" type="number" min="1">
+<label for="voluntario">Voluntário (para coleta)</label><input id="voluntario" placeholder="Rui">
+<label for="motivo">Motivo (para devolução)</label><input id="motivo" placeholder="Sem voluntário hoje">
+<div class="actions"><button id="coletar">Confirmar coleta</button><button id="devolver" class="danger">Devolver doação</button></div></section>
+<section><h2>Resultado mensal — Marta</h2><label for="mes">Mês de referência</label><input id="mes" type="month"><button id="relatorio" class="secondary">Consultar resultado</button><p id="resumo"></p><hr><h3>Painel semanal de expiradas</h3><label for="semana">Segunda-feira da semana</label><input id="semana" type="date"><button id="ver-expiradas" class="secondary">Consultar expiradas</button><p id="expiradas"></p></section>
+<script>
+const el=id=>document.getElementById(id);
+const valor=id=>el(id).value.trim();
+function mensagem(texto,erro=false){el('mensagem').textContent=texto;el('mensagem').style.color=erro?'#ad382e':'#246345'}
+async function api(url,opcoes){const resposta=await fetch(url,opcoes);const dado=await resposta.json();if(!resposta.ok)throw Error(dado.erro||`HTTP ${resposta.status}`);return dado}
+function post(url,dados){return api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)})}
+function item(texto){const li=document.createElement('li');li.textContent=texto;return li}
+async function carregar(){try{const dados=await api('/api/doacoes');el('lista').replaceChildren();if(!dados.length)el('lista').append(item('Nenhuma doação disponível.'));for(const d of dados){const li=item(`#${d.id}: ${d.tipo} — ${d.quantidade} (até ${d.validade}) · ${d.doador}`);const btn=document.createElement('button');btn.textContent='Aceitar';btn.onclick=async()=>{try{await post(`/api/doacoes/${d.id}/aceitar`,{ong:valor('ong')});mensagem('Doação aceita!');await carregar()}catch(e){mensagem(e.message,true)}};li.append(btn);el('lista').append(li)}}catch(e){mensagem(e.message,true)}}
+el('publicar').onclick=async()=>{try{await post('/api/doacoes',{doador:valor('doador'),tipo:valor('tipo'),quantidade:valor('quantidade'),validade:valor('validade')});mensagem('Doação publicada!');await carregar()}catch(e){mensagem(e.message,true)}};
+el('consultar').onclick=async()=>{try{const dados=await api(`/api/doadores/${encodeURIComponent(valor('consulta'))}/doacoes`);el('historico').replaceChildren(...dados.map(d=>item(`#${d.id} ${d.tipo}: ${d.status}${d.ong?' — '+d.ong:''}${d.voluntario?' — coletada por '+d.voluntario:''}`)));if(!dados.length)el('historico').append(item('Sem doações para esse doador.'))}catch(e){mensagem(e.message,true)}};
+el('coletar').onclick=async()=>{try{await post(`/api/doacoes/${valor('id-doacao')}/coletar`,{ong:valor('ong'),voluntario:valor('voluntario')});mensagem('Coleta confirmada!');await carregar()}catch(e){mensagem(e.message,true)}};
+el('devolver').onclick=async()=>{try{await post(`/api/doacoes/${valor('id-doacao')}/devolver`,{ong:valor('ong'),motivo:valor('motivo')});mensagem('Doação devolvida e novamente disponível!');await carregar()}catch(e){mensagem(e.message,true)}};
+el('relatorio').onclick=async()=>{try{const r=await api(`/api/relatorios/mensal?mes=${encodeURIComponent(valor('mes'))}`);el('resumo').textContent=`Publicadas: ${r.publicadas}; aceitas: ${r.aceitas}; coletadas: ${r.coletadas}; tempo médio: ${r.tempo_medio_horas===null?'sem coletas no mês':r.tempo_medio_horas+' h'}`}catch(e){mensagem(e.message,true)}};
+el('ver-expiradas').onclick=async()=>{try{const r=await api(`/api/relatorios/expiradas?inicio=${valor('semana')}`);el('expiradas').textContent=`Doações expiradas sem coleta: ${r.expiradas_sem_coleta}`}catch(e){mensagem(e.message,true)}};
+el('mes').value=new Date().toISOString().slice(0,7);const hoje=new Date();hoje.setUTCDate(hoje.getUTCDate()-((hoje.getUTCDay()+6)%7));el('semana').value=hoje.toISOString().slice(0,10);carregar();
+</script>
+</body></html>

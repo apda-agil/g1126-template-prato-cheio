@@ -15,9 +15,12 @@ erDiagram
         TEXT validade
         TEXT status
         TEXT ong
-        TEXT criada_em
+        TIMESTAMPTZ criada_em
         TEXT doador
-        TEXT coletada_em
+        TIMESTAMPTZ coletada_em
+        TIMESTAMPTZ aceita_em
+        TEXT voluntario
+        TEXT motivo_devolucao
     }
 ```
 

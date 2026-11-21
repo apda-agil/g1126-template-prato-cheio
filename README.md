@@ -1,235 +1,84 @@
+# Prato Cheio — Trabalho 3 (PostgreSQL)
 
-# Prato Cheio — PostgreSQL
+Aplicação de doação de alimentos feita em Node.js/Express/PostgreSQL 16. Fluxo: publicação → aceite → coleta, com possibilidade de devolver a doação aceita à lista. Também oferece histórico por doador, cancelamento anterior ao aceite e relatórios para Marta.
 
-Sistema de doações de alimentos desenvolvido para conectar doadores a organizações não governamentais (ONGs).
+## Como rodar
 
-Projeto desenvolvido com Node.js, Express e PostgreSQL.
-
-## Tecnologias utilizadas
-
-- JavaScript
-- Node.js
-- Express
-- PostgreSQL 16
-- Docker e Docker Compose
-- Vitest
-- Git e GitHub
-- GitHub Actions
-
-## Funcionalidades
-
-- Cadastrar doações de alimentos
-- Listar doações disponíveis
-- Permitir que ONGs aceitem doações
-- Consultar doações por doador
-- Cancelar doações disponíveis
-- Registrar a coleta de doações
-- Gerar relatórios mensais
-
-## Migração para PostgreSQL
-
-O sistema utilizava SQLite como banco de dados.
-
-A migração para PostgreSQL foi realizada para melhorar o suporte a acessos simultâneos, permitir uma arquitetura de banco cliente-servidor e preparar a aplicação para futuras melhorias.
-
-As consultas SQL foram adaptadas para PostgreSQL, preservando as regras de negócio existentes.
-
-## Requisitos
-
-Para executar o projeto, é necessário instalar:
-
-- Node.js 22.13 ou superior
-- Docker Desktop com Docker Compose
-- Git (opcional)
-
-
-## Como executar
-
-### 1. Clonar o repositório
-
-Em uma pasta nova, execute:
+**Requisitos:** Node.js >=22.13, Docker Desktop + Compose e Git. O WSL/Docker precisa estar funcional no Windows. Se não houver permissão de administrador, executar em uma máquina preparada da equipe; GitHub Actions não substitui o clone limpo.
 
 ```bash
 git clone https://github.com/apda-agil/g1126-template-prato-cheio.git
 cd g1126-template-prato-cheio
+# Para conferir a entrega final, após a branch existir:
+git switch entrega-3
 ```
 
-Para testar uma branch específica, selecione-a com
-`git switch nome-da-branch`.
+Copie `.env.example` para `.env`: no PowerShell, `Copy-Item .env.example .env`; em bash, `cp .env.example .env`. O arquivo de exemplo contém `DATABASE_URL=postgresql://prato_cheio:prato_cheio@localhost:5432/prato_cheio` e `DATABASE_TEST_URL=postgresql://prato_cheio:prato_cheio@localhost:5432/prato_cheio_test`. Estas senhas são exclusivamente para desenvolvimento local; nunca use credenciais reais no GitHub.
 
-### 2. Configurar o ambiente
-
-É necessário utilizar Node.js 22.13 ou superior e
-Docker Desktop com Docker Compose funcionando.
-
-No PowerShell, execute:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-O arquivo .env deve conter as conexões PostgreSQL
-correspondentes à configuração do compose.yaml.
-
-O arquivo .env não deve ser enviado para o GitHub.
-
-### 3. Iniciar o PostgreSQL
+**Três comandos principais** (depois de configurar o ambiente):
 
 ```bash
 docker compose up -d
-```
-
-Verifique o estado do serviço:
-
-```bash
-docker compose ps
-```
-
-Resultado esperado: serviço postgres com status
-Up (healthy).
-
-### 4. Instalar as dependências
-
-```bash
 npm ci
-```
-
-O npm ci instala as versões registradas no
-package-lock.json, permitindo uma instalação
-reproduzível.
-
-### 5. Criar as tabelas
-
-```bash
 npm run db:migrar
 ```
 
-Resultado esperado: mensagem "schema criado".
+Em seguida, rode `npm test` e `npm start`; abra `http://localhost:3000`. Em outro terminal, `curl http://localhost:3000/api/saude` deve retornar `{"ok":true}`. `docker compose ps` deve mostrar o PostgreSQL saudável. O script `db/init/01-test-db.sql` cria o banco de testes apenas quando o volume é inicializado pela primeira vez; para volumes antigos, crie esse banco manualmente sem apagar os dados existentes.
 
-### 6. Iniciar a aplicação
+## Definição de pronto
 
-```bash
-npm start
-```
+1. **Regra testada:** cada critério tem `it()` e um limite/erro — conferir `tests/trabalho3-historias.test.js`.
+2. **PostgreSQL integrado:** `npm run db:migrar`, sem SQLite — conferir `src/db.js`, `src/repositorio.js` e `compose.yaml`.
+3. **Revisão independente:** PR com revisor diferente do autor e comentários respondidos — conferir aba Files changed/Conversation do PR.
+4. **CI verde na main:** conferir Actions após cada merge, sem prosseguir com main vermelha.
+5. **Demonstração reproduzível:** `docs/demo.md` testado sem ajuda por outra pessoa, no celular, com campo `## Testado por` preenchido.
+6. **Validação explícita:** `docs/validacao.md` lista critérios originais e H1–H4, evidências e limitações.
 
-No navegador, acesse:
+## Histórias e responsáveis
 
-http://localhost:3000
+| História | Situação no pacote | Dono | Revisor |
+|---|---|---|---|
+| H1 — histórico do doador e doador obrigatório | Código e testes preparados | [nome] | [outro nome] |
+| H2 — coleta com voluntário e horário | Código e testes preparados | [nome] | [outro nome] |
+| H3 — devolução com motivo e autorização | Código e testes preparados | [nome] | [outro nome] |
+| H4 — indicadores mensais e média até coleta | Código e testes preparados | [nome] | [outro nome] |
 
-Resultado esperado: a página inicial do Prato Cheio
-é carregada.
+Os nomes e PRs devem corresponder aos commits reais: preencher antes da entrega.
 
-### 7. Verificar as funcionalidades
+## Como demonstrar
 
-Na interface do sistema:
+Na página inicial, informe **doador, alimento, quantidade e validade**; publique. Aceite como ONG. Informe o ID e voluntário para confirmar a coleta. Para devolução, publique uma segunda doação, aceite e devolva com motivo: ela volta à lista. O histórico mostra todos os estados do doador. O relatório mensal conta publicadas (mês da publicação), aceitas (mês do último aceite) e coletadas (mês da coleta), com tempo médio em horas ou “sem coletas no mês”. O painel semanal contabiliza vencimentos sem coleta.
 
-1. Publicar uma doação com tipo, quantidade e validade.
-2. Verificar se a doação aparece na lista.
-3. Aceitar a doação como ONG.
-4. Confirmar que ela não aparece mais entre as disponíveis.
+## API (principais rotas)
 
-### 8. Encerrar o ambiente
+| Método | Rota | Observação |
+|---|---|---|
+| GET | `/api/saude` | Saúde do serviço |
+| POST | `/api/doacoes` | `{doador,tipo,quantidade,validade}` |
+| GET | `/api/doacoes` | Ofertas disponíveis |
+| GET | `/api/doadores/:doador/doacoes` | Histórico |
+| POST | `/api/doacoes/:id/aceitar` | `{ong}` |
+| POST | `/api/doacoes/:id/coletar` | `{ong,voluntario}` |
+| POST | `/api/doacoes/:id/devolver` | `{ong,motivo}` |
+| POST | `/api/doacoes/:id/cancelar` | `{doador}`, somente disponível |
+| GET | `/api/relatorios/mensal?mes=2026-11` | H4 completo |
+| GET | `/api/relatorios/aceitas?mes=2026-11` | Compatibilidade Trabalho 2 |
+| GET | `/api/relatorios/expiradas?inicio=2020-01-06` | Semana começa na segunda-feira |
 
-Para interromper a aplicação, pressione Ctrl+C
-no terminal em que o servidor está executando.
+## Testes e CI
 
-Para parar o PostgreSQL:
+`npm test` usa `DATABASE_TEST_URL` e apaga apenas a tabela no banco exclusivo de testes. **Nunca execute a suíte com credenciais do banco principal.** O GitHub Actions executa os testes com PostgreSQL ao receber PR ou push em `main` / `entrega-3`; salve o link verde real depois do último commit. As alterações nos testes legados documentam a evolução dos contratos H1 e H2 (doador e voluntário obrigatórios).
 
-```bash
-docker compose down
-```
+## Limitações
 
-Esse comando mantém o volume persistente do banco.
-
-## Verificação de clone limpo
-
-O teste de clone limpo deve ser realizado por um
-integrante que não escreveu estas instruções.
-
-O integrante deverá:
-
-1. Clonar o repositório em uma pasta nova.
-2. Seguir somente as instruções do README.
-3. Configurar o PostgreSQL.
-4. Iniciar a aplicação.
-5. Publicar e aceitar uma doação.
-6. Registrar erros, dificuldades e ajustes necessários.
-
-### Registro da verificação
-
-**Testado por:** [preencher após execução]
-
-**Data:** [preencher após execução]
-
-**Resultado:** [Aprovado / Parcial / Reprovado]
-
-**Dificuldades encontradas:** [preencher]
-
-**Correções realizadas:** [preencher]
-
-**Evidência:** [link ou captura do teste]
-
-## Executar os testes
-
-Para executar os testes automatizados:
-
-```bash
-npm test
-```
-
-Os testes utilizam o banco PostgreSQL exclusivo prato_cheio_test.
-
-Os testes de integração exigem que o PostgreSQL esteja em execução.
-
-## Integração contínua
-
-O projeto utiliza GitHub Actions para executar testes automaticamente.
-
-O pipeline:
-
-1. Baixa o código do repositório.
-2. Configura o Node.js.
-3. Inicializa o PostgreSQL.
-4. Instala as dependências.
-5. Cria o banco de testes.
-6. Executa os testes automatizados.
-7. Verifica a inicialização da aplicação.
-
-## Estrutura do projeto
-
-src/
-- app.js: rotas da API
-- server.js: inicialização do servidor
-- db.js: conexão com PostgreSQL
-- repositorio.js: consultas SQL
-- doacoes.js: regras de negócio
-
-tests/
-- Testes automatizados com Vitest
-
-db/init/
-- Script para criação do banco de testes
-
-docs/
-- Documentação, ADRs e evidências
-
-compose.yaml
-- Configuração do PostgreSQL no Docker
-
-## Observações importantes
-
-A migração do código para PostgreSQL não transfere automaticamente os registros existentes em arquivos SQLite.
-
-Se houver dados antigos importantes, será necessário realizar backup e importação separadamente.
-
-O banco de testes deve ser utilizado apenas para testes automatizados.
-
-O sistema ainda utiliza identificadores textuais de doadores e ONGs, sem autenticação real.
+O piloto identifica doadores, ONGs e voluntários por texto, sem login/controle de acesso real. A validade é recebida como texto ISO na API; dados antigos precisam ser revisados. O modelo guarda o último aceite, não um histórico auditável. A demo e o tempo de preenchimento em 30s exigem validação humana.
 
 ## Documentação
 
-As decisões arquiteturais e informações do projeto estão disponíveis na pasta docs/.
-
-## Objetivo acadêmico
-
-Aplicar conceitos de Engenharia de Software, persistência de dados, testes automatizados, integração contínua e evolução de sistemas existentes.
+- `docs/projeto.md`: decisões de estados, datas e compatibilidade.
+- `docs/analise.md`: critérios originais da Unidade 1.
+- `docs/refatoracoes.md`: refatorações e evidências de CI/PR.
+- `docs/validacao.md`: critérios da Unidade 1 e H1–H4.
+- `docs/demo.md`: demonstração e teste cruzado.
+- `docs/retrospectivas/3.md`: retrospectiva e autoavaliação.
+- `docs/guia-entrega-trabalho3.md`: processo de PR, branch congelada e Teams.

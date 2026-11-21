@@ -33,16 +33,16 @@ describe('Incrementos do Trabalho 2', () => {
   it('somente ONG que aceitou confirma coleta uma única vez', async () => {
     const d = (await publicar()).body;
     await request(app).post(`/api/doacoes/${d.id}/aceitar`).send({ ong: 'ONG A' });
-    expect((await request(app).post(`/api/doacoes/${d.id}/coletar`).send({ ong: 'ONG B' })).status).toBe(400);
-    const c = await request(app).post(`/api/doacoes/${d.id}/coletar`).send({ ong: 'ONG A' });
+    expect((await request(app).post(`/api/doacoes/${d.id}/coletar`).send({ ong: 'ONG B', voluntario: 'Rui' })).status).toBe(400);
+    const c = await request(app).post(`/api/doacoes/${d.id}/coletar`).send({ ong: 'ONG A', voluntario: 'Rui' });
     expect(c.status).toBe(200); expect(c.body.status).toBe('coletada');
     expect(c.body.coletada_em).toBeTruthy();
-    expect((await request(app).post(`/api/doacoes/${d.id}/coletar`).send({ ong: 'ONG A' })).status).toBe(400);
+    expect((await request(app).post(`/api/doacoes/${d.id}/coletar`).send({ ong: 'ONG A', voluntario: 'Rui' })).status).toBe(400);
   });
   it('relatório de aceites preserva contagem após coleta', async () => {
     const d = (await publicar()).body;
     await request(app).post(`/api/doacoes/${d.id}/aceitar`).send({ ong: 'ONG A' });
-    await request(app).post(`/api/doacoes/${d.id}/coletar`).send({ ong: 'ONG A' });
+    await request(app).post(`/api/doacoes/${d.id}/coletar`).send({ ong: 'ONG A', voluntario: 'Rui' });
     const mes = new Date().toISOString().slice(0, 7);
     const r = await request(app).get(`/api/relatorios/aceitas?mes=${mes}`);
     expect(r.status).toBe(200); expect(r.body).toEqual({ mes, aceitas: 1 });

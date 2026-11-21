@@ -26,7 +26,7 @@ describe('publicar e listar doações', () => {
   it('mostra a doação publicada na lista de disponíveis', async () => {
     const publicacao = await request(app)
       .post('/api/doacoes')
-      .send({ tipo: 'Sopa', quantidade: '10 porções', validade: '2026-09-10' });
+      .send({ tipo: 'Sopa', quantidade: '10 porções', validade: '2026-09-10', doador: 'Doador A' });
 
     expect(publicacao.status).toBe(201);
 
@@ -58,7 +58,7 @@ describe('aceitar uma doação', () => {
   async function publicar() {
     const res = await request(app)
       .post('/api/doacoes')
-      .send({ tipo: 'Frutas', quantidade: '2 caixas', validade: '2026-09-10' });
+      .send({ tipo: 'Frutas', quantidade: '2 caixas', validade: '2026-09-10', doador: 'Doador A' });
     return res.body;
   }
 
