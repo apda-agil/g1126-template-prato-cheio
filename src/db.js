@@ -98,7 +98,10 @@ export async function migrar() {
       ong TEXT,
       criada_em TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
       doador TEXT,
-      coletada_em TIMESTAMPTZ
+      coletada_em TIMESTAMPTZ,
+      aceita_em TIMESTAMPTZ,
+      voluntario TEXT,
+      motivo_devolucao TEXT
     )
   `);
 
@@ -109,6 +112,9 @@ export async function migrar() {
 export async function atualizarSchemaLegado() {
   await query('ALTER TABLE doacoes ADD COLUMN IF NOT EXISTS doador TEXT');
   await query('ALTER TABLE doacoes ADD COLUMN IF NOT EXISTS coletada_em TIMESTAMPTZ');
+  await query('ALTER TABLE doacoes ADD COLUMN IF NOT EXISTS aceita_em TIMESTAMPTZ');
+  await query('ALTER TABLE doacoes ADD COLUMN IF NOT EXISTS voluntario TEXT');
+  await query('ALTER TABLE doacoes ADD COLUMN IF NOT EXISTS motivo_devolucao TEXT');
 }
 
 // Limpa somente o banco exclusivo de testes

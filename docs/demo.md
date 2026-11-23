@@ -1,128 +1,43 @@
+# Roteiro da demonstração — Trabalho 3 (3 minutos)
 
-# Roteiro da demonstração — Prato Cheio
+**Versão:** branch `entrega-3` depois da integração das quatro histórias. **Objetivo:** demonstrar no celular publicação → aceite → coleta e aceite → devolução, mais um erro.
 
-**Trabalho 3 — Engenharia de Software**
+## Preparação — clone limpo
 
-**Duração:** aproximadamente 3 minutos
+Em computador com Node 22.13+, Docker e Git:
 
-## Objetivo
-
-Demonstrar o funcionamento do sistema Prato Cheio, que conecta doadores de alimentos a ONGs, permitindo publicar, consultar e aceitar doações.
-
-## Pré-requisitos
-
-- Node.js 22.13 ou superior
-- PostgreSQL 16
-- Docker Desktop com Docker Compose
-- Projeto disponível no computador
-
-## Preparação
-
-Na pasta do projeto, executar:
-
-```powershell
-Copy-Item .env.example .env
-docker compose up -d
-npm ci
-npm run db:migrar
-npm start
+```bash
+git clone https://github.com/apda-agil/g1126-template-prato-cheio.git
+cd g1126-template-prato-cheio
+git switch entrega-3
 ```
 
-Acessar no navegador:
+No PowerShell, `Copy-Item .env.example .env`; no Linux/macOS, `cp .env.example .env`. Depois: `docker compose up -d`, `docker compose ps`, `npm ci`, `npm run db:migrar`, `npm test`, `npm start`. Abra `http://localhost:3000` no navegador do celular na mesma rede (se acessível) ou use o modo de dispositivo do navegador. Confirme `GET /api/saude` retornando `{"ok":true}`.
 
-http://localhost:3000
+## Passo a passo com ação e resultado
 
-Resultado esperado: a página Prato Cheio abre com o formulário de publicação e a lista de doações disponíveis.
-
-## Roteiro de demonstração (3 minutos)
-
-| Tempo | Ação | Resultado esperado |
+| Tempo | Ação exata | Resultado esperado |
 |---|---|---|
-| 0:00–0:20 | Explicar o objetivo do sistema | Apresentação do problema de desperdício de alimentos |
-| 0:20–0:50 | Abrir a página inicial | Formulário e lista de doações disponíveis |
-| 0:50–1:20 | Cadastrar uma doação | Doação publicada e exibida na lista |
-| 1:20–1:50 | Aceitar a doação como ONG | Doação removida da lista de disponíveis |
-| 1:50–2:30 | Testar publicação sem validade | API rejeita a publicação |
-| 2:30–3:00 | Apresentar limitações | Explicar o que ainda precisa ser desenvolvido |
+| 0:00–0:20 | Mostrar o problema: alimento disponível pode ficar sem coleta | Explica-se a última milha da doação |
+| 0:20–0:55 | Preencher doador `Padaria Pão Bom`, tipo `Arroz`, quantidade `10 pacotes`, validade futura; publicar | Doação disponível, com ID, doador e dados textuais |
+| 0:55–1:20 | Informar ONG `Casa Esperança`, clicar **Aceitar** | Sai da lista de disponíveis; histórico do doador mostra `aceita` |
+| 1:20–1:45 | Informar ID da doação aceita, voluntário `Rui`, clicar **Confirmar coleta** | Histórico mostra `coletada` e o nome de Rui |
+| 1:45–2:15 | Publicar outra doação, aceitá-la e devolver com o motivo `sem voluntário hoje` | Volta à lista de disponíveis, sem ONG responsável |
+| 2:15–2:35 | Tentar coletar a segunda doação ainda disponível | Mensagem de erro, estado permanece disponível |
+| 2:35–3:00 | Abrir **Resultado mensal**, consultar mês atual e explicar o relatório; mencionar limitações | Contagem de publicadas, aceitas, coletadas e média/sem coletas |
 
-## Passo a passo reproduzível
-
-### 1. Publicar uma doação
-
-Na página inicial, preencher:
-
-- Tipo de alimento: Arroz
-- Quantidade: 10 pacotes
-- Validade: selecionar uma data futura
-
-Clicar no botão **Publicar**.
-
-**Resultado esperado:** a doação aparece na lista de doações disponíveis.
-
-### 2. Aceitar uma doação
-
-Na lista de doações disponíveis, localizar a doação de arroz.
-
-Clicar no botão **Aceitar**.
-
-**Resultado esperado:** a doação deixa de aparecer na lista de disponíveis, pois foi aceita pela ONG.
-
-### 3. Demonstrar um caso de erro
-
-O formulário web atual não apresenta mensagens de erro de validação. Por isso, o caso negativo deve ser demonstrado diretamente pela API.
-
-Abrir o terminal PowerShell e executar:
-
-```powershell
-$corpo = @{
-    tipo = "Arroz"
-    quantidade = "10 pacotes"
-} | ConvertTo-Json
-
-try {
-    Invoke-RestMethod -Uri "http://localhost:3000/api/doacoes" -Method Post -ContentType "application/json" -Body $corpo
-} catch {
-    Write-Host "HTTP:" ([int]$_.Exception.Response.StatusCode)
-}
-```
-
-**Resultado esperado:** HTTP 400, pois a validade é obrigatória.
-
-Nenhuma doação deve ser cadastrada por essa requisição.
-
-### 4. Apresentar as limitações
-
-Explicar que:
-
-- A autenticação real de doadores e ONGs ainda não foi implementada.
-- O sistema utiliza identificadores textuais para representar os usuários.
-- O PostgreSQL substituiu o SQLite como banco de dados.
-- Algumas funcionalidades ainda precisam de melhorias para uso em produção.
+**Consulta adicional H1:** o botão **Consultar histórico** lista apenas as publicações do doador indicado. **Painel legado:** a seção de expiradas contabiliza validades vencidas da semana indicada (segunda-feira).
 
 ## Testado por
 
-**Nome do integrante:** Wedley Silva Schmoeller
+- **Nome de quem não escreveu o roteiro:** [preencher após executar]
+- **Data:** [preencher]
+- **Commit/branch testado:** [link]
+- **Conseguiu executar sem ajuda?** [sim/não]
+- **Resultado e dificuldades:** [registrar fatos reais]
+- **O que mudou no roteiro depois do teste:** [explicar e linkar commit]
+- **Evidência (foto, captura ou link):** [preencher]
 
-**Data:** 12/11/2026
+## Limitações
 
-**Executou sem ajuda:** Sim
-
-**Resultado:** Aprovado
-
-**Dificuldades encontradas:** Nenhum
-
-**Alterações realizadas no roteiro:** Nenhum
-
-## Evidências
-
-- Link do Pull Request: [preencher]
-- Link do GitHub Actions verde: [preencher]
-- Capturas da demonstração: [adicionar, se disponíveis]
-
-## Uso de IA
-
-Foi utilizado o ChatGPT para auxiliar na organização do roteiro e na descrição dos resultados esperados.
-
-As etapas foram elaboradas a partir das funcionalidades existentes no código do projeto.
-
-A execução prática e a confirmação dos resultados devem ser realizadas pela equipe.
+Não há autenticação real para os nomes informados. O banco precisa estar disponível; o CI verde não substitui a demonstração local. O tempo de publicação de 30 segundos ainda depende de medição com usuários.

@@ -28,7 +28,7 @@ describe('Validação da Entrega 3', () => {
         .send({
           tipo,
           quantidade: '10 unidades',
-          validade: '2026-12-20'
+          validade: '2026-12-20', doador: 'Doador A'
         });
 
       expect(resposta.status).toBe(201);
@@ -51,7 +51,7 @@ describe('Validação da Entrega 3', () => {
       .send({
         tipo: 'Leite',
         quantidade: '5 caixas',
-        validade: '2026-12-20'
+        validade: '2026-12-20', doador: 'Doador A'
       });
 
     expect(publicacao.status).toBe(201);
@@ -74,7 +74,7 @@ describe('Validação da Entrega 3', () => {
       id: publicacao.body.id,
       tipo: 'Leite',
       quantidade: '5 caixas',
-      validade: '2026-12-20',
+      validade: '2026-12-20', doador: 'Doador A',
       status: 'disponivel'
     });
   });

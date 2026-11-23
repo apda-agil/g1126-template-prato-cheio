@@ -44,7 +44,19 @@ export function criarApp() {
     catch (e) { res.status(400).json({ erro: e.message }); }
   });
   app.post('/api/doacoes/:id/coletar', async (req, res) => {
-    try { res.json(await doacoes.coletar(req.params.id, req.body?.ong)); }
+    try { res.json(await doacoes.coletar(req.params.id, req.body?.ong, req.body?.voluntario)); }
+    catch (e) { res.status(400).json({ erro: e.message }); }
+  });
+  app.post('/api/doacoes/:id/devolver', async (req, res) => {
+    try { res.json(await doacoes.devolver(req.params.id, req.body?.ong, req.body?.motivo)); }
+    catch (e) { res.status(400).json({ erro: e.message }); }
+  });
+  app.get('/api/relatorios/expiradas', async (req, res) => {
+    try { res.json(await doacoes.painelSemanal(req.query.inicio)); }
+    catch (e) { res.status(400).json({ erro: e.message }); }
+  });
+  app.get('/api/relatorios/mensal', async (req, res) => {
+    try { res.json(await doacoes.resultadoMes(req.query.mes)); }
     catch (e) { res.status(400).json({ erro: e.message }); }
   });
   app.get('/api/relatorios/aceitas', async (req, res) => {

@@ -21,7 +21,7 @@
 - [Diagrama de contexto](diagramas/contexto.md)
 - [Diagrama de dados](diagramas/dados.md)
 
-**Divergências entre o modelo anterior e `src/db.js`:** (1) endereço e bairro foram previstos, mas não são persistidos; (2) o modelo previa entidades de doador e ONG, enquanto o banco guarda identificadores textuais; (3) o modelo previa rastreamento de coleta, ausente no esquema original. No incremento, foram adicionados `doador` e `coletada_em`, mas ainda não existe autenticação nem persistência de endereço/bairro. Os diagramas atuais devem representar o estado implementado.
+**Divergências entre o modelo anterior e `src/db.js`:** (1) endereço e bairro foram previstos, mas não são persistidos; (2) o modelo previa entidades de doador e ONG, enquanto o banco guarda identificadores textuais; (3) o modelo previa rastreamento de coleta, ausente no esquema original. No Trabalho 3, foram adicionados `doador`, `coletada_em`, `aceita_em`, `voluntario` e `motivo_devolucao`, mas ainda não existe autenticação nem persistência de endereço/bairro. Os diagramas atuais devem representar o estado implementado.
 
 ## ADRs
 
@@ -32,7 +32,7 @@
 | Requisito | Como afeta o design |
 |---|---|
 | **RNF-01:** Quando a aplicação for usada no celular com conexão instável, o fluxo publicar/listar/aceitar funciona sem bibliotecas de mapas e sem imagens externas obrigatórias, medido por inspeção de `public/index.html` e execução do fluxo no navegador com rede limitada (teste manual a registrar). | D1: UI textual, sem SDK de mapas; equipe de UX paga com menos recursos visuais. |
-| **RNF-02:** Quando a suíte executar com `DATABASE_FILE` apontando para arquivo real, nenhuma operação dos testes grava nesse arquivo, medido pelos 2 testes de isolamento em `tests/seguranca-banco.test.js` e ausência/criação controlada de arquivo. | ADR 0002: banco em memória e guarda de limpeza; QA paga com manutenção dos testes de persistência separados. |
+| **RNF-02:** Quando a suíte executar com `DATABASE_TEST_URL` exclusiva, as operações de limpeza não podem atingir o banco principal, medido pelos testes de isolamento em `tests/seguranca-banco.test.js` e `tests/protecao-banco-entrega3.test.js`. | ADR 0002: PostgreSQL exclusivo para testes e guarda de limpeza; QA mantém o isolamento entre ambientes. |
 | **RNF-03:** Quando duas ONGs tentarem aceitar a mesma doação disponível, somente a primeira mudança de estado terá sucesso e uma única ONG ficará registrada, medido pelo teste `recusa aceitar uma doação que já foi aceita` em `tests/doacoes.test.js`. | SQL atômico `UPDATE ... WHERE status='disponivel'`; equipe de backend paga com regras explícitas de transição e teste. |
 
 
@@ -47,7 +47,7 @@
 | Existe teste que bloqueia limpeza fora do banco de testes? | `tests/seguranca-banco.test.js` + `src/db.js` |
 | A história de segurança e os incrementos têm critérios Dado/Quando/Então e testes? | `docs/historias-incremento.md`, `tests/incremento.test.js` |
 | O CI instala dependências, roda testes e verifica saúde? | `.github/workflows/ci.yml` |
-| A migração PostgreSQL está somente planejada para Unidade 3, com teste de equivalência previsto? | `docs/adr/0001-migracao-sqlite-postgresql.md` |
+| A migração PostgreSQL está implementada e comprovada por CI? | `docs/adr/0001-migracao-sqlite-postgresql.md` |
 | Há evidências de PR revisado e CI verde por integrante? | `docs/evidencias/registro-prs.md` (links dos PRs e revisões) |
 
 ## Uso de IA
@@ -96,3 +96,13 @@ Os resultados deverão ser registrados após a execução.
 A migração do código não transfere automaticamente os dados antigos do SQLite.
 
 O sistema continua utilizando identificadores textuais de doadores e ONGs, sem autenticação real.
+
+
+### Decisões de estados e das histórias H1–H4 (Trabalho 3)
+
+- **Estados:** `disponivel`, `aceita`, `coletada`, e `cancelada` (terminal do incremento anterior). Transições: `disponivel → aceita`, `aceita → coletada`, `aceita → disponivel` (devolução), `disponivel → cancelada`. Qualquer outra transição retorna HTTP 400; o SQL condicional mantém a operação atômica.
+- **H1:** doador obrigatório nas novas publicações; os registros antigos com `doador IS NULL` continuam armazenados, mas não aparecem em consultas por nome. Identificação textual sem autenticação: protótipo, não pronto para produção.
+- **H2:** `voluntario` obrigatório na coleta. Segunda confirmação retorna erro; nome aparece para o doador no histórico. Registrar apenas nome textual e informar limitação de privacidade.
+- **H3:** motivo obrigatório; a ONG titular devolve, limpando `ong` e `aceita_em`, mantendo `motivo_devolucao`. A mesma ONG pode aceitar novamente; o último aceite substitui o anterior. Coletada nunca é devolvida.
+- **H4:** cada contagem pertence ao mês UTC do evento respectivo: `criada_em`, `aceita_em`, `coletada_em`. A doação publicada em outubro e coletada em novembro conta publicação em outubro e coleta em novembro. Média em horas, duas casas decimais; sem coleta, `null` na API e “sem coletas no mês” na interface.
+- **Unidade 1:** a nova exigência de identificar o doador torna o critério original “apenas três campos” parcialmente incompatível com H1. O painel semanal usa semana UTC iniciando segunda-feira e conta doações vencidas sem coleta até a data atual.
